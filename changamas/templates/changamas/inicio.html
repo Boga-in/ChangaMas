@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+</head>
+<body>
+    <h1>ChangaMás </h1>
+
+    <!-- Si Django nos envió algún mensaje (como el de éxito), lo mostramos aquí -->
+    {% if messages %}
+        <div style="background-color: #d4edda; color: green; padding: 10px; border: 1px solid green; margin-bottom: 20px;">
+            {% for message in messages %}
+                <strong>{{ message }}</strong>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Botón para ir al formulario usando el nombre de la URL -->
+    <a href="{% url 'crear_publicacion' %}">
+        <button style="padding: 10px 20px; cursor: pointer;">Crear Publicación</button>
+    </a>
+
+    <br><br>
+
+    <!-- Verificamos que haya alguien logueado Y que su campo es_admin_general sea Verdadero -->
+    {% if user.is_authenticated and user.es_admin_general %}
+        <div>
+            <p style="margin-top: 0; color: #007bff;"><strong>Área exclusiva de Administrador:</strong></p>
+            <a href="{% url 'listar_publicaciones' %}">
+                <button style="padding: 10px 20px; cursor: pointer; background-color: #007bff; color: white; border: none;">
+                    Ver lista de todas las publicaciones
+                </button>
+            </a>
+        </div>
+    {% endif %}
+</body>
+</html>
