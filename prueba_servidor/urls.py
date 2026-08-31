@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path
-from changamas.views import crear_publicacion, inicio, listar_publicaciones
+from publicaciones.views import crear_publicacion, inicio, listar_publicaciones
 
 urlpatterns = [
     path('admin/', admin.site.urls),

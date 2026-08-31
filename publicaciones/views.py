@@ -6,7 +6,7 @@ from .models import Publicacion
 
 # 1. Creamos la nueva vista para la página de inicio
 def inicio(request):
-    return render(request, 'changamas/inicio.html')
+    return render(request, 'publicaciones/inicio.html')
 
 # 2. Modificamos tu vista actual
 def crear_publicacion(request):
@@ -32,7 +32,7 @@ def crear_publicacion(request):
     else:
         formulario = PublicacionForm()
 
-    return render(request, 'changamas/crear_publicacion.html', {'formulario': formulario})
+    return render(request, 'publicaciones/crear_publicacion.html', {'formulario': formulario})
 
 def listar_publicaciones(request):
     # Seguridad básica: bloqueamos a quienes no tengan la sesión iniciada o no sean admin_general
@@ -43,4 +43,4 @@ def listar_publicaciones(request):
     publicaciones_guardadas = Publicacion.objects.all()
     
     # Enviamos la lista a una nueva plantilla HTML
-    return render(request, 'changamas/lista_publicaciones.html', {'publicaciones': publicaciones_guardadas})
+    return render(request, 'publicaciones/lista_publicaciones.html', {'publicaciones': publicaciones_guardadas})
