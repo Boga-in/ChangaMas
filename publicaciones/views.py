@@ -12,7 +12,7 @@ def inicio(request):
 def crear_publicacion(request):
     #esto es para que si el usuario no esta logueado no pueda crear publicaciones
     if not request.user.is_authenticated:
-        return HttpResponse("Por favor, inicia sesión...")
+        return redirect('admin')  # Redirige a la página de inicio de sesión si el usuario no está autenticado
     #Si el usuario da al boton guardar
     if request.method == 'POST':
         formulario = PublicacionForm(request.POST)
