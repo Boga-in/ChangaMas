@@ -1,20 +1,23 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Publicación</title>
-</head>
-<body>
-    <h1>Crear una nueva publicación</h1>
-    
-    <form method="POST">
-        <!-- Esta etiqueta de seguridad es obligatoria en Django para evitar hackeos -->
-        {% csrf_token %}
+{% extends 'base.html' %}
+
+{% block title %}Inicio - ChangaMas{% endblock %}
+
+{% block content %}
+    <head>
+        <meta charset="UTF-8">
+        <title>Crear Publicación</title>
+    </head>
+    <body>
+        <h1>Crear una nueva publicación</h1>
         
-        <!-- Aquí le decimos a Django que dibuje el formulario -->
-        {{ formulario.as_p }}
-        
-        <button type="submit">Guardar Publicación</button>
-    </form>
+        <form method="POST">
+            <!-- Esta etiqueta de seguridad es obligatoria en Django para evitar hackeos -->
+            {% csrf_token %}
+            
+            <!-- Aquí le decimos a Django que dibuje el formulario -->
+            {{ formulario.as_p }}
+            
+            <button type="submit">Guardar Publicación</button>
+        </form>
 </body>
-</html>
+{% endblock %}
