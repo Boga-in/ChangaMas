@@ -16,7 +16,9 @@
     <a href="{% url 'crear_publicacion' %}">
         <button style="padding: 10px 20px; cursor: pointer;">Crear Publicación</button>
     </a>
-
+    <a href="{% url 'listar_publicaciones' %}">
+        <button style="padding: 10px 20px; cursor: pointer;">Ver Todas las Publicaciones</button>
+    </a>
     <br><br>
 
     {% if user.is_authenticated and user.es_admin_general %}
