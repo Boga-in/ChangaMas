@@ -4,11 +4,7 @@ from django.contrib import messages  # <-- Importamos el sistema de mensajes
 from .forms import PublicacionForm
 from .models import Publicacion
 
-# 1. Creamos la nueva vista para la página de inicio
-def inicio(request):
-    return render(request, 'publicaciones/inicio.html')
 
-# 2. Modificamos tu vista actual
 def crear_publicacion(request):
     #esto es para que si el usuario no esta logueado no pueda crear publicaciones
     if not request.user.is_authenticated:
