@@ -3,30 +3,28 @@
 {% block title %}Inicio - ChangaMas{% endblock %}
 
 {% block content %}
-    <h1>Publicaciones</h1>
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h1>Explora las últimas publicaciones</h1>
+        <p>Encontra o publica tu "changa" de forma rápida y sencilla.</p>
+    </div>
 
-    {% if messages %}
-        <div style="background-color: #d4edda; color: green; padding: 10px; border: 1px solid green; margin-bottom: 20px;">
-            {% for message in messages %}
-                <strong>{{ message }}</strong>
-            {% endfor %}
-        </div>
-    {% endif %}
+    <!-- Contenedor estilo "Grilla" para las publicaciones -->
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+        
+        <!-- Bucle for para recorrer el contexto que mandó la vista -->
+        {% for pub in publicaciones %}
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; width: 300px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
+                <h3 style="margin-top: 0; color: #2c3e50;">{{ pub.titulo }}</h3>
+                <p style="color: #555;">{{ pub.descripcion }}</p>
+                <hr style="border: 0; border-top: 1px solid #eee;">
+                <small style="color: #7f8c8d;">
+                    <strong>Publicado por:</strong> {{ pub.autor.username }}
+                </small>
+            </div>
+        {% empty %}
+            <!-- Mensaje por si la base de datos está vacía -->
+            <p style="color: #7f8c8d; font-size: 18px;">Aún no hay publicaciones. ¡Anímate a ser el primero!</p>
+        {% endfor %}
 
-    <a href="{% url 'crear_publicacion' %}">
-        <button style="padding: 10px 20px; cursor: pointer;">Crear Publicación</button>
-    </a>
-
-    <br><br>
-
-    {% if user.is_authenticated and user.es_admin_general %}
-        <div style="padding: 15px; border: 2px dashed #007bff; display: inline-block;">
-            <p style="margin-top: 0; color: #007bff;"><strong>Área exclusiva de Administrador:</strong></p>
-            <a href="{% url 'listar_publicaciones' %}">
-                <button style="padding: 10px 20px; cursor: pointer; background-color: #007bff; color: white; border: none;">
-                    Ver lista de todas las publicaciones
-                </button>
-            </a>
-        </div>
-    {% endif %}
+    </div>
 {% endblock %}

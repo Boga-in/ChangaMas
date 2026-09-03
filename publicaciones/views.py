@@ -8,7 +8,7 @@ from .models import Publicacion
 def crear_publicacion(request):
     #esto es para que si el usuario no esta logueado no pueda crear publicaciones
     if not request.user.is_authenticated:
-        return redirect('admin')  # Redirige a la página de inicio de sesión si el usuario no está autenticado
+        return redirect('admin:index')  # Redirige a la página de inicio de sesión si el usuario no está autenticado
     #Si el usuario da al boton guardar
     if request.method == 'POST':
         formulario = PublicacionForm(request.POST)
@@ -25,7 +25,7 @@ def crear_publicacion(request):
             # Y enviamos al usuario de vuelta a la página de inicio
             return redirect('inicio')
     
-    else:
+    elif request.method == 'GET':
         formulario = PublicacionForm()
 
     return render(request, 'publicaciones/crear_publicacion.html', {'formulario': formulario})
