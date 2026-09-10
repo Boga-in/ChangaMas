@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from publicaciones.views import crear_publicacion, inicio, listar_publicaciones
+from publicaciones.views import crear_publicacion, listar_publicaciones
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -11,7 +11,6 @@ urlpatterns = [
     path('crear/', crear_publicacion, name='crear_publicacion'),
     path('listar/', listar_publicaciones, name='listar_publicaciones'),
     path('publicaciones/', include('publicaciones.urls')),
-    path('', inicio, name='inicio'),
 ]
 
 # Esta inyección permite al servidor local entregar las imágenes
