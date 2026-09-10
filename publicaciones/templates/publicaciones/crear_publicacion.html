@@ -1,14 +1,15 @@
-{% extends 'base.html' %}
-
-{% block title %}Inicio - ChangaMas{% endblock %}
-
-{% block content %}
-    <head>
-        <meta charset="UTF-8">
-        <title>Crear Publicación</title>
-    </head>
-    <body>
-        <h1>Crear una nueva publicación</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Publicación</title>
+</head>
+<body>
+    <h1>Crear una nueva publicación</h1>
+    
+    <form method="POST" enctype="multipart/form-data">
+        <!-- Esta etiqueta de seguridad es obligatoria en Django para evitar hackeos -->
+        {% csrf_token %}
         
         <form method="POST">
             <!-- Esta etiqueta de seguridad es obligatoria en Django para evitar hackeos -->
