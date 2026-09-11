@@ -18,11 +18,12 @@ def crear_publicacion(request):
             publicacion = formulario.save(commit=False)
             # Asignamos el autor de la publicación al usuario que está haciendo la solicitud (Es la manera en que se me ocurrio seguro existe una mejor)
             publicacion.autor = request.user
-            publicacion.save()
-            
-            # Preparamos el cartel de éxito
-            messages.success(request, '¡La publicación se creó correctamente!')
-            # Y enviamos al usuario de vuelta a la página de inicio
+            if publicacion.save():
+                # Preparamos el cartel de éxito        
+                messages.success(request, '¡La publicación se creó correctamente!')
+            else:
+                # Preparamos el cartel de error
+                messages.error(request, 'Hubo un error al crear la publicación. Por favor, inténtalo de nuevo.')
             return redirect('inicio')
     
     elif request.method == 'GET':
