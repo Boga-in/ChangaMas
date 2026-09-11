@@ -1,27 +1,22 @@
-<!-- HEADER GLOBAL / NAV-BAR -->
-    <header style="background-color: #2c3e50; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center;">
-        
-        <!-- LOGO / TÍTULO -->
-        <div style="font-size: 24px; font-weight: bold;">
-            <a href="{% url 'inicio' %}" style="color: white; text-decoration: none;">ChangaMas</a>
-        </div>
+<header class="main-header">
+    <div class="brand-logo">
+        <a href="{% url 'inicio' %}">ChangaMas</a>
+    </div>
 
-        <!-- NAVEGACIÓN CENTRAL -->
-        <nav>
-            <a href="{% url 'inicio' %}" style="color: white; text-decoration: none; margin-right: 20px;">Inicio</a>
-            <a href="{% url 'crear_publicacion' %}" style="color: white; text-decoration: none; margin-right: 20px;">Perfil</a> 
-            <!-- Por ahora lleva a crear publicacion el boton perfil pero solo porque la idea es que desde el perfil va a crearlas  -->
-        </nav>
+    <nav class="nav-links">
+        <a href="{% url 'inicio' %}">Inicio</a>
+        <a href="{% url 'publicaciones:crear' %}">Perfil</a> 
+    </nav>
 
-        <!-- ZONA DE USUARIO (El espacio para un futuro Login/Registro) -->
-        <div>
-            {% if user.is_authenticated %}
-                <span style="color: #1abc9c; margin-right: 15px;">Hola, {{ user.username }}</span>
-                <!-- Aquí irá el botón de Cerrar Sesión después -->
-            {% else %}
-                <!-- Aquí irán los futuros botones de Login y Registro -->
-                <span style="color: #bdc3c7; font-style: italic;">(Futuro Login / Registro)</span>
-            {% endif %}
-        </div>
-        
-    </header>
+    <div class="user-zone">
+        {% if user.is_authenticated %}
+            <span class="user-name">Hola, {{ user.username }}</span>
+            <form action="{% url 'admin:logout' %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-link-danger">Cerrar Sesión</button>
+            </form>
+        {% else %}
+            <span class="user-muted">(Futuro Login / Registro)</span>
+        {% endif %}
+    </div>
+</header>

@@ -21,6 +21,11 @@
                     <strong>Publicado por:</strong> {{ pub.autor.username }}
                 </small>
             </div>
+            {% if user == publicacion.autor or user.es_admin_general %}
+                <a href="{% url 'publicaciones:editar' pub.pk %}">Editar</a> |
+                <a href="{% url 'publicaciones:eliminar' pub.pk %}">Eliminar</a> |
+                <a href="{% url 'publicaciones:detalle' pub.pk %}">Detalle</a> |
+            {% endif %}
         {% empty %}
             <!-- Mensaje por si la base de datos está vacía -->
             <p style="color: #7f8c8d; font-size: 18px;">Aún no hay publicaciones. ¡Anímate a ser el primero!</p>

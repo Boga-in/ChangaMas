@@ -60,7 +60,9 @@ TEMPLATES = [
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': True,
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -70,7 +72,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'prueba_servidor.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
@@ -134,3 +135,10 @@ MAILERS = {
 }
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
+
+# Ruta login
+LOGIN_URL = 'admin:login'
+
+# rutas al cerrar o iniciar sesion
+LOGIN_REDIRECT_URL = 'inicio'
+LOGOUT_REDIRECT_URL = 'inicio'

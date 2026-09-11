@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ publicacion.titulo }} - ChangaMas{% endblock %}
+
+{% block content %}
+    <h1>{{ publicacion.titulo }}</h1>
+    <p><strong>Publicado por:</strong> {{ publicacion.autor.username }}</p>
+    {% if publicacion.foto %}
+        <div style="margin-bottom: 20px;">
+            <img src="{{ publicacion.foto.url }}" alt="{{ publicacion.titulo }}" style="max-width: 600px; height: auto;">
+        </div>
+    {% endif %}
+    <p>{{ publicacion.descripcion }}</p>
+
+    <div style="margin-top: 20px;">
+        {% if user == publicacion.autor or user.es_admin_general %}
+            <a href="{% url 'publicaciones:editar' publicacion.pk %}">Editar</a> |
+            <a href="{% url 'publicaciones:eliminar' publicacion.pk %}">Eliminar</a> |
+        {% endif %}
+        <a href="{% url 'publicaciones:lista' %}">Volver al listado</a>
+    </div>
+{% endblock %}

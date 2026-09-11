@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Publicaciones - ChangaMas{% endblock %}
+
+{% block content %}
+    <h1>Listado de Publicaciones</h1>
+
+    <a href="{% url 'publicaciones:crear' %}">Crear nueva publicación</a>
+    <br><br>
+
+    {% if publicaciones %}
+        {% for publicacion in publicaciones %}
+            <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+                <h2>{{ publicacion.titulo }}</h2>
+                <p><strong>Autor:</strong> {{ publicacion.autor.username }}</p>
+                
+                {% if publicacion.foto %}
+                    <img src="{{ publicacion.foto.url }}" alt="{{ publicacion.titulo }}" style="max-width: 300px; height: auto;">
+                {% endif %}
+
+                <p>{{ publicacion.descripcion|truncatewords:20 }}</p>
+                
+                <a href="{% url 'publicaciones:detalle' publicacion.pk %}">Ver Detalle</a>
+                
+                
+                | <a href="{% url 'publicaciones:editar' publicacion.pk %}">Editar</a>
+                | <a href="{% url 'publicaciones:eliminar' publicacion.pk %}">Eliminar</a>
+                
+            </div>
+        {% endfor %}
+
+        <!-- Controles de Paginación generados automáticamente por ListView -->
+        {% if is_paginated %}
+            <div style="margin-top: 20px;">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; Primera</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <p>No hay publicaciones disponibles.</p>
+    {% endif %}
+{% endblock %}

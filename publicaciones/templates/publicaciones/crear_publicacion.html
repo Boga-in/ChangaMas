@@ -1,23 +1,18 @@
-{% block content %}    
-    <head>
-        <meta charset="UTF-8">
-        <title>Crear Publicación</title>
-    </head>
-    <body>
-        <h1>Crear una nueva publicación</h1>
+{% extends 'base.html' %}
+
+{% block title %}Crear Publicación - ChangaMas{% endblock %}
+
+{% block content %}
+    <h1>Crear una nueva publicación</h1>
+    
+    <!-- enctype="multipart/form-data" es obligatorio para subir imágenes o archivos -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         
-        <form method="POST" enctype="multipart/form-data">
-            <!-- Esta etiqueta de seguridad es obligatoria en Django para evitar hackeos -->
-            {% csrf_token %}
-            
-            <form method="POST">
-                <!-- Esta etiqueta de seguridad es obligatoria en Django para evitar hackeos -->
-                {% csrf_token %}
-                
-                <!-- Aquí le decimos a Django que dibuje el formulario -->
-                {{ formulario.as_p }}
-                
-                <button type="submit">Guardar Publicación</button>
-            </form>
-    </body>
+        <!-- Las CBV pasan el formulario a la plantilla bajo el nombre 'form' -->
+        {{ form.as_p }}
+        
+        <button type="submit">Guardar Publicación</button>
+        <a href="{% url 'publicaciones:lista' %}">Cancelar</a>
+    </form>
 {% endblock %}
