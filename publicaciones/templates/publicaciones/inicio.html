@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - ChangaMas{% endblock %}
+
+{% block content %}
+    <h1>Publicaciones</h1>
+
+    {% if messages %}
+        <div style="background-color: #d4edda; color: green; padding: 10px; border: 1px solid green; margin-bottom: 20px;">
+            {% for message in messages %}
+                <strong>{{ message }}</strong>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <a href="{% url 'crear_publicacion' %}">
+        <button style="padding: 10px 20px; cursor: pointer;">Crear Publicación</button>
+    </a>
+    <a href="{% url 'listar_publicaciones' %}">
+        <button style="padding: 10px 20px; cursor: pointer;">Ver Todas las Publicaciones</button>
+    </a>
+    <br><br>
+
+    {% if user.is_authenticated and user.es_admin_general %}
+        <div style="padding: 15px; border: 2px dashed #007bff; display: inline-block;">
+            <p style="margin-top: 0; color: #007bff;"><strong>Área exclusiva de Administrador:</strong></p>
+            <a href="{% url 'listar_publicaciones' %}">
+                <button style="padding: 10px 20px; cursor: pointer; background-color: #007bff; color: white; border: none;">
+                    Ver lista de todas las publicaciones
+                </button>
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}

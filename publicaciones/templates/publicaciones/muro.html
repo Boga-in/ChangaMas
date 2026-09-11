@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Inicio - ChangaMas{% endblock %}
+
+{% block content %}
+    <div class="contenedor-grilla">
+        {% for pub in publicaciones %}
+            <div style="border: 1px solid blue; padding: 10px;">
+                <div>
+                    <h4>{{ pub.titulo }}</h4>
+                    <img src="{{ pub.foto.url }}" width="100" height="100" alt="Imagen del trabajo">
+                    <p>{{ pub.descripcion }}</p>
+                    <small><strong>Creado por:</strong> {{ pub.autor.username }}</small>
+                </div>
+            </div>
+        {% empty %}
+            <p>Todavía no hay ninguna publicación.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
