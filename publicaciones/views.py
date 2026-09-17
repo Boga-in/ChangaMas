@@ -18,21 +18,12 @@ def crear_publicacion(request):
             publicacion = formulario.save(commit=False)
             # Asignamos el autor de la publicación al usuario que está haciendo la solicitud (Es la manera en que se me ocurrio seguro existe una mejor)
             publicacion.autor = request.user
-<<<<<<< HEAD
-            if publicacion.save():
-                # Preparamos el cartel de éxito        
-                messages.success(request, '¡La publicación se creó correctamente!')
-            else:
-                # Preparamos el cartel de error
-                messages.error(request, 'Hubo un error al crear la publicación. Por favor, inténtalo de nuevo.')
-=======
             publicacion.foto_perfil = request.FILES.get('foto_perfil')  # <-- Guardamos la foto de perfil
             publicacion.save()
             
             # Preparamos el cartel de éxito
             messages.success(request, '¡La publicación se creó correctamente!')
             # Y enviamos al usuario de vuelta a la página de inicio
->>>>>>> 414bcdc750e487e2d591dde3c9b4af8045aaa4a9
             return redirect('inicio')
     
     elif request.method == 'GET':
@@ -49,4 +40,16 @@ def listar_publicaciones(request):
     
     # Enviamos la lista a una nueva plantilla HTML
     return render(request, 'publicaciones/lista_publicaciones.html', {'publicaciones': publicaciones_guardadas})
+
+def inicio(request):
+    # Traemos todas las publicaciones de la base de datos. 
+    # .order_by('-id') las ordena de la más nueva a la más vieja)
+    publicaciones_recientes = Publicacion.objects.all().order_by('-id')
     
+    # Armamos el contexto para pasarlo al HTML
+    contexto = {
+        'publicaciones': publicaciones_recientes
+    }
+    
+    # Renderizamos la plantilla pasándole el contexto
+    return render(request, 'publicaciones/inicio.html', contexto)
