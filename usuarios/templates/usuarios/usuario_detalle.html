@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil de {{ usuario.username }} - ChangaMas{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Perfil de {{ usuario.username }}</h1>
+    
+    <!-- Muestra la foto solo si el usuario subió una -->
+    {% if usuario.foto %}
+        <img src="{{ usuario.foto.url }}" alt="Foto de {{ usuario.username }}" width="150">
+    {% else %}
+        <p><em>Este usuario no tiene foto de perfil.</em></p>
+    {% endif %}
+
+    <ul>
+        <li><strong>Nombre completo:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</li>
+        <li><strong>Email:</strong> {{ usuario.email }}</li>
+        <li><strong>DNI:</strong> {{ usuario.dni }}</li>
+        <li><strong>Teléfono:</strong> {{ usuario.telefono }}</li>
+        <li><strong>Fecha de registro:</strong> {{ usuario.date_joined|date:"d/m/Y" }}</li>
+    </ul>
+
+    <a href="{% url 'usuario_lista' %}">⬅️ Volver a la lista</a>
+</body>
+{% endblock %}

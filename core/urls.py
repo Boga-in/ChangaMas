@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', inicio, name='inicio'),
     path('publicaciones/', include('publicaciones.urls')),
+    path('usuarios/', include('usuarios.urls')),
 ]
 
 # Esta inyección permite al servidor local entregar las imágenes

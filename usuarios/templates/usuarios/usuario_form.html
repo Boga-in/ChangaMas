@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrarse - ChangaMas{% endblock %}
+
+{% block content %}
+<body>
+    <!-- Si la vista pasa un 'object', significa que estamos editando. Si no, estamos creando -->
+    <h1>{% if object %}Editar Usuario{% else %}Registrar Nuevo Usuario{% endif %}</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Renderiza todos los campos de tu creacioUsuarioForm / modificarUsuarioForm -->
+        {{ form.as_p }}
+        
+        <button type="submit">Guardar</button>
+        <a href="{% url 'usuario_lista' %}">Cancelar</a>
+    </form>
+</body>
+{% endblock %}   

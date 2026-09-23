@@ -40,8 +40,8 @@ class busquedaEmpleado(models.Model):
 
 
 class Publicacion(models.Model):
-    oferta = models.ForeignKey('busquedaEmpleado', on_delete=models.CASCADE, null=True, blank=True)
-    busqueda = models.ForeignKey('busquedaEmpleo', on_delete=models.CASCADE, null=True, blank=True)
+    oferta = models.ForeignKey(busquedaEmpleado, on_delete=models.CASCADE, null=True, blank=True)
+    busqueda = models.ForeignKey(busquedaEmpleo, on_delete=models.CASCADE, null=True, blank=True)
     estado = models.CharField(max_length=20, choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')], default='activo', null=True, blank=True)
     descripcion = models.TextField()
     duracion = models.CharField(max_length=100, null=True, blank=True)

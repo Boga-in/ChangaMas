@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Usuarios - ChangaMas{% endblock %}
+
+{% block content %}
+    <h1>Gestión de Usuarios</h1>
+    
+    <a href="{% url 'usuario_crear' %}">➕ Registrar Nuevo Usuario</a>
+    <hr>
+    
+    <ul>
+        {% for usuario in usuarios %}
+            <li style="margin-bottom: 10px;">
+                <strong>{{ usuario.username }}</strong> ({{ usuario.email }})
+                <br>
+                <a href="{% url 'usuario_detalle' usuario.pk %}">Ver detalles</a> |
+                <a href="{% url 'usuario_editar' usuario.pk %}">Editar</a> |
+                <a href="{% url 'usuario_eliminar' usuario.pk %}">Eliminar</a>
+            </li>
+        {% empty %}
+            <li>No hay usuarios registrados en el sistema.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
