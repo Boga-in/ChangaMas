@@ -14,16 +14,16 @@ urlpatterns = [
     path('<int:pk>/editar/', UsuarioUpdateView.as_view(), name='usuario_editar'),
     path('<int:pk>/eliminar/', UsuarioDeleteView.as_view(), name='usuario_eliminar'),
     # Rutas para Empleados
-    path('empleados/', EmpleadoListView.as_view(), name='empleado_list'),
-    path('empleados/<int:pk>/', EmpleadoDetailView.as_view(), name='empleado_detail'),
-    path('empleados/nuevo/', EmpleadoCreateView.as_view(), name='empleado_create'),
-    path('empleados/<int:pk>/editar/', EmpleadoUpdateView.as_view(), name='empleado_update'),
-    path('empleados/<int:pk>/eliminar/', EmpleadoDeleteView.as_view(), name='empleado_delete'),
+    path('empleados/', EmpleadoListView.as_view(), name='empleado_lista'),
+    path('empleados/<int:pk>/', EmpleadoDetailView.as_view(), name='empleado_detalle'),
+    path('empleados/nuevo/', EmpleadoCreateView.as_view(), name='empleado_crear'),
+    path('empleados/<int:pk>/editar/', EmpleadoUpdateView.as_view(), name='empleado_editar'),
+    path('empleados/<int:pk>/eliminar/', EmpleadoDeleteView.as_view(), name='empleado_eliminar'),
 
     # Rutas para Empresas
-    path('empresas/',   EmpresaListView.as_view(), name='empresa_list'),
-    path('empresas/<int:pk>/', EmpresaDetailView.as_view(), name='empresa_detail'),
-    path('empresas/nuevo/', EmpresaCreateView.as_view(), name='empresa_create'),
-    path('empresas/<int:pk>/editar/', EmpresaUpdateView.as_view(), name='empresa_update'),
-    path('empresas/<int:pk>/eliminar/', EmpresaDeleteView.as_view(), name='empresa_delete'),
+    path('empresas/',   EmpresaListView.as_view(), name='empresa_lista'),
+    path('empresas/<int:pk>/', EmpresaDetailView.as_view(), name='empresa_detalle'),
+    path('empresas/nuevo/', EmpresaCreateView.as_view(), name='empresa_crear'),
+    path('empresas/<int:pk>/editar/', EmpresaUpdateView.as_view(), name='empresa_editar'),
+    path('empresas/<int:pk>/eliminar/', EmpresaDeleteView.as_view(), name='empresa_eliminar'),
 ]

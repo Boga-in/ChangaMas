@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Empresa {{ empresa.nombre_empresa }} - ChangaMas{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Confirmar Eliminación</h1>
+    
+    <p>¿Estás seguro de que deseas eliminar el perfil de la empresa <strong>{{ object.nombre_empresa }}</strong>?</p>
+    <p><em>Esta acción borrará los datos de la empresa, pero el usuario {{ object.usuario.username }} seguirá existiendo en el sistema.</em></p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" style="color: white; background-color: red; padding: 5px 10px; border: none; cursor: pointer;">
+            Sí, eliminar empresa
+        </button>
+        <a href="{% url 'empresa_lista' %}" style="margin-left: 10px;">Cancelar y volver</a>
+    </form>
+</body>
+
+{% endblock %}

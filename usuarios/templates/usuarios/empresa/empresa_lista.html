@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Empresas - ChangaMas{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Directorio de Empresas</h1>
+    
+    <a href="{% url 'empresa_crear' %}">➕ Registrar Nueva Empresa</a>
+    <hr>
+    
+    <ul>
+        {% for empresa in empresas %}
+            <li style="margin-bottom: 10px;">
+                <strong>{{ empresa.nombre_empresa }}</strong> 
+                (Gestionada por: {{ empresa.usuario.username }})
+                <br>
+                <a href="{% url 'empresa_detalle' empresa.pk %}">Ver perfil</a> |
+                <a href="{% url 'empresa_editar' empresa.pk %}">Editar</a> |
+                <a href="{% url 'empresa_eliminar' empresa.pk %}">Eliminar</a>
+            </li>
+        {% empty %}
+            <li>No hay empresas registradas en el sistema todavía.</li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}

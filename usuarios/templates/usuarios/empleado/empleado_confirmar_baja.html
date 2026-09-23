@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Empleado eliminar {{ empleado.usuario.username }} - ChangaMas{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Confirmar Eliminación</h1>
+    
+    <p>¿Estás seguro de que deseas eliminar el perfil profesional (como empleado) de <strong>{{ object.usuario.username }}</strong>?</p>
+    <p><em>Nota: Solo se borrará su CV, experiencia y cargo. Su cuenta de usuario normal seguirá activa.</em></p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" style="color: white; background-color: red; padding: 5px 10px; border: none; cursor: pointer;">
+            Sí, eliminar perfil profesional
+        </button>
+        <a href="{% url 'empleado_lista' %}" style="margin-left: 10px;">Cancelar y volver</a>
+    </form>
+</body>
+
+{% endblock %}

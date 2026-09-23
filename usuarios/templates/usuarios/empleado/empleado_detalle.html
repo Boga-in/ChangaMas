@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Empleado {{ empleado.usuario.username }} - ChangaMas{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Perfil Profesional: {{ empleado.usuario.username }}</h1>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; max-width: 600px;">
+        <h2>{{ empleado.cargo }}</h2>
+        
+        <ul>
+            <li><strong>Nombre:</strong> {{ empleado.usuario.first_name }} {{ empleado.usuario.last_name }}</li>
+            <li><strong>Email de contacto:</strong> {{ empleado.usuario.email }}</li>
+            <li><strong>Fecha de disponibilidad/ingreso:</strong> {{ empleado.fecha_ingreso|date:"d/m/Y" }}</li>
+        </ul>
+
+        <h3>Experiencia y Habilidades:</h3>
+        <p>{{ empleado.experiencia }}</p>
+
+        <h3>Curriculum Vitae:</h3>
+        {% if empleado.cv %}
+            <a href="{{ empleado.cv.url }}" target="_blank" style="display: inline-block; padding: 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                📄 Ver / Descargar CV adjunto
+            </a>
+        {% else %}
+            <p><em>Este usuario aún no ha subido su CV.</em></p>
+        {% endif %}
+    </div>
+    <br>
+    <a href="{% url 'empleado_lista' %}">⬅️ Volver a la lista de empleados</a>
+</body>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Empresa {{ empresa.nombre_empresa }} - ChangaMas{% endblock %}
+
+{% block content %}
+<body>
+    <h1>🏢 {{ empresa.nombre_empresa }}</h1>
+    
+    <div style="border: 1px solid #ccc; padding: 15px; max-width: 600px;">
+        <h3>Sobre la empresa:</h3>
+        <p>{{ empresa.descripcion }}</p>
+
+        <h3>Datos de contacto:</h3>
+        <ul>
+            <li><strong>Usuario Administrador:</strong> {{ empresa.usuario.username }}</li>
+            <li><strong>Dirección:</strong> {{ empresa.direccion }}</li>
+            <li><strong>Teléfono:</strong> {{ empresa.telefono }}</li>
+            <li>
+                <strong>Sitio Web:</strong> 
+                <a href="{{ empresa.website }}" target="_blank">{{ empresa.website }}</a>
+            </li>
+        </ul>
+    </div>
+    <br>
+    <a href="{% url 'empresa_lista' %}">⬅️ Volver a la lista de empresas</a>
+</body>
+
+{% endblock %}
