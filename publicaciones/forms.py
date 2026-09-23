@@ -6,4 +6,4 @@ class PublicacionForm(forms.ModelForm):
         model = Publicacion
         # Solo pedimos título y descripción. 
         # El autor lo pondremos nosotros por detrás según quién tenga la sesión iniciada.
-        fields = ['titulo', 'descripcion', 'foto']
+        fields = ["oferta", "busqueda", "estado", "descripcion", "duracion", "urgencia", "lugar", "foto"]

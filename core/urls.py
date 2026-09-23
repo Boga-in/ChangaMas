@@ -2,14 +2,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from publicaciones.views import crear_publicacion, listar_publicaciones
+from publicaciones.views import inicio
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('publicaciones.urls')),
-    path('admin/login', crear_publicacion, name='admin'),
-    path('crear/', crear_publicacion, name='crear_publicacion'),
-    path('listar/', listar_publicaciones, name='listar_publicaciones'),
+    path('', inicio, name='inicio'),
     path('publicaciones/', include('publicaciones.urls')),
 ]
 
