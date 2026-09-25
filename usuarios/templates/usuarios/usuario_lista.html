@@ -9,16 +9,31 @@
     <hr>
     
     <ul>
-        {% for usuario in usuarios %}
-            <li style="margin-bottom: 10px;">
-                <strong>{{ usuario.username }}</strong> ({{ usuario.email }})
-                <br>
-                <a href="{% url 'usuario_detalle' usuario.pk %}">Ver detalles</a> |
-                <a href="{% url 'usuario_editar' usuario.pk %}">Editar</a> |
-                <a href="{% url 'usuario_eliminar' usuario.pk %}">Eliminar</a>
-            </li>
-        {% empty %}
-            <li>No hay usuarios registrados en el sistema.</li>
-        {% endfor %}
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre de Usuario</th>
+                    <th scope="col">Correo Electrónico</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>
+                            <a href="{% url 'usuario_detalle' usuario.pk %}" class="btn btn-info btn-sm">Ver</a>
+                            <a href="{% url 'usuario_editar' usuario.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{% url 'usuario_eliminar' usuario.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No hay usuarios registrados en el sistema.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </ul>
 {% endblock %}

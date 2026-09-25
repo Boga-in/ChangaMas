@@ -35,7 +35,7 @@ def listar_publicaciones(request):
     # Traemos TODOS los registros de la tabla Publicacion
     publicaciones_guardadas = Publicacion.objects.all()
     # Seguridad básica: bloqueamos a quienes no tengan la sesión iniciada o no sean admin_general
-    if not request.user.is_authenticated or not request.user.es_admin_general:
+    if not request.user.is_authenticated or not request.user.is_staff:
         return render(request, 'publicaciones/muro.html', {'publicaciones': publicaciones_guardadas})    
     
     # Enviamos la lista a una nueva plantilla HTML

@@ -12,6 +12,10 @@
             {% if user.is_authenticated %}
                 <a href="{% url 'usuario_detalle' user.pk %}" style="color: white; text-decoration: none; margin-right: 20px;">Perfil</a> 
             {% endif %}
+            {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'listar_publicaciones' %}" style="color: white; text-decoration: none; margin-right: 20px;">Publicaciones</a>
+                <a href="{% url 'usuario_lista' %}" style="color: white; text-decoration: none; margin-right: 20px;">Usuarios</a>
+            {% endif %}
         </nav>
 
         <!-- ZONA DE USUARIO (El espacio para un futuro Login/Registro) -->
