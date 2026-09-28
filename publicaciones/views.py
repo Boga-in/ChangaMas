@@ -1,26 +1,39 @@
 from django.shortcuts import render, redirect  # <-- Agregamos redirect
 from django.http import HttpResponse
 from django.contrib import messages  # <-- Importamos el sistema de mensajes
-from .forms import PublicacionForm
+from .forms import PublicacionEmpleadoForm, PublicacionEmpresaForm
 from .models import Publicacion
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def crear_publicacion(request):
     #esto es para que si el usuario no esta logueado no pueda crear publicaciones
-    if not request.user.is_authenticated:
-        return redirect('login')
+    #if not request.user.is_authenticated:
+    #   return redirect('login')
     #Si el usuario da al boton guardar
     if request.method == 'POST':
-        formulario = PublicacionForm(request.POST, request.FILES)
+        # Si el usuario es un empleado, usamos el formulario de empleado sino el de empresa
+        if request.user.es_empleado:
+            formulario = PublicacionEmpleadoForm(request.POST, request.FILES, usuario_actual=request.user)
         
-        if formulario.is_valid():
-            # Como el formulario ya tiene todo, simplemente lo guardamos
-            formulario.save()
-            messages.success(request, '¡La publicación se creó correctamente!')
-            return redirect('inicio')
-    
+            if formulario.is_valid():
+                # Como el formulario ya tiene todo, simplemente lo guardamos
+                formulario.save()
+                messages.success(request, '¡La publicación se creó correctamente!')
+                return redirect('inicio')
+        elif request.user.es_empresa:
+                formulario = PublicacionEmpresaForm(request.POST, request.FILES, usuario_actual=request.user)
+                
+                if formulario.is_valid():
+                    # Como el formulario ya tiene todo, simplemente lo guardamos
+                    formulario.save()
+                    messages.success(request, '¡La publicación se creó correctamente!')
+                    return redirect('inicio')
     elif request.method == 'GET':
-        formulario = PublicacionForm()
+        if request.user.es_empleado:
+            formulario = PublicacionEmpleadoForm(usuario_actual=request.user)
+        elif request.user.es_empresa:
+            formulario = PublicacionEmpresaForm(usuario_actual=request.user)
 
     return render(request, 'publicaciones/crear_publicacion.html', {'formulario': formulario})
 

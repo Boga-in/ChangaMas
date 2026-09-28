@@ -5,9 +5,18 @@ class Usuario(AbstractUser):
     dni = models.CharField(max_length=8, unique=True)
     telefono = models.CharField(max_length=15)
     foto = models.ImageField(upload_to='media/fotos_perfil/', null=True, blank=True)
-    es_admin_general = models.BooleanField(default=False)
     def __str__(self):
         return self.username
+    
+    @property
+    def es_empleado(self):
+        # Pregunta si este usuario tiene un perfil de "empleado" asociado
+        return hasattr(self, 'empleado')
+
+    @property
+    def es_empresa(self):
+        # Pregunta si este usuario tiene un perfil de "empresa" asociado
+        return hasattr(self, 'empresa')
 
 class empleado(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)

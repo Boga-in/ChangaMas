@@ -4,7 +4,9 @@
 
 {% block content %}
 <div class="container mt-4">
-
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button class="btn btn-primary btn-lg publicacionButton "><a href="{% url 'crear_publicacion' %}" class="text-white text-decoration-none">Publicar</a></button>
+    </div>
     <!-- SECCIÓN 1: EL CARRUSEL (Solo para usuarios logueados) -->
     {% if user.is_authenticated %}
         <div id="carruselDestacados" class="carousel slide mb-5 shadow-sm rounded" data-bs-ride="carousel">
