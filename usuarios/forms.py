@@ -1,5 +1,6 @@
 # users/forms.py
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from .models import Usuario
 from .models import empleado
@@ -7,8 +8,14 @@ from .models import empleado
 class creacioUsuarioForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = Usuario
-        # Añade los campos extra que necesites
+        # Añadimos los campos que queremos que se muestren en el formulario de creación
         fields = ('username', 'email', 'first_name', 'last_name','dni','telefono', 'foto' )
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # Recorre todos los campos y les agrega la clase de Bootstrap
+            for field_name, field in self.fields.items():
+                field.widget.attrs['class'] = 'form-control'
 
 class modificarUsuarioForm(UserChangeForm):
     class Meta:
@@ -23,15 +30,19 @@ class EmpleadoForm(forms.ModelForm):
             # 2. Obligas al widget a mostrarlo en este formato
             format='%d-%m-%Y', 
             attrs={
-                # OJO: Si usas 'type': 'date', HTML5 ignora tu formato y usa 
-                # el formato local del navegador (ej. mm/dd/yyyy en EEUU).
-                # Para forzar tu formato exacto, usa 'text' y un placeholder.
+
                 'type': 'text', 
                 'placeholder': 'dd-mm-aaaa',
-                'class': 'form-control' # Opcional, si usas Bootstrap
+                'class': 'form-control'
             }
         )
     )
     class Meta:
         model = empleado
         fields = ['usuario', 'fecha_ingreso', 'cargo', 'cv', 'experiencia']
+
+class CustomLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'

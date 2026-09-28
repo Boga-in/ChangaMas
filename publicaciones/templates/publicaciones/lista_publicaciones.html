@@ -1,13 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Inicio - ChangaMas{% endblock %}
+{% block title %}Lista de Publicaciones - ChangaMas{% endblock %}
 
 {% block content %}
-    <head>
-        <meta charset="UTF-8">
-        <title>Lista de Publicaciones</title>
-    </head>
-    <body>
+
         <h1>Todas las publicaciones y sus creadores</h1>
         <a href="{% url 'inicio' %}">Volver al inicio</a>
         <hr>
@@ -15,14 +11,26 @@
         <!-- Aquí Django repetirá este bloque por cada publicación -->
         {% for pub in publicaciones %}
             <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px;">
-                <h3 style="margin-top: 0;">{{ pub.titulo }}</h3>
+                <h3 style="margin-top: 0;">{% if pub.oferta %}
+                                                <span class="badge bg-primary">Oferta</span> {{ pub.oferta.titulo }}
+                                            {% elif pub.busqueda %}
+                                                <span class="badge bg-success">Búsqueda</span> {{ pub.busqueda.titulo }}
+                                            {% else %}
+                                                <span class="badge bg-secondary">Publicación General</span>
+                                            {% endif %}</h3>
                 <p>{{ pub.descripcion }}</p>
-                <small><strong>Creado por:</strong> {{ pub.autor.username }}</small>
+                <small><strong>Creado por:</strong> {% if pub.oferta %}
+                                                        {{ pub.oferta.id_empresa.usuario.username }} (Empresa)
+                                                    {% elif pub.busqueda %}
+                                                        {{ pub.busqueda.id_empleado.usuario.username }} (Empleado)
+                                                    {% else %}
+                                                        Usuario desconocido
+                                                    {% endif %}
+                    </small>
             </div>
         {% empty %}
             <!-- Esto se muestra si la base de datos está vacía -->
             <p>Todavía no hay ninguna publicación.</p>
         {% endfor %}
 
-    </body>
 {% endblock %}

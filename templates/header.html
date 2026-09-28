@@ -18,15 +18,21 @@
             {% endif %}
         </nav>
 
-        <!-- ZONA DE USUARIO (El espacio para un futuro Login/Registro) -->
+        <!-- ZONA DE USUARIO -->
         <div>
             {% if user.is_authenticated %}
-                <span style="color: #1abc9c; margin-right: 15px;">Hola, {{ user.username }}</span>
-                <!-- Aquí irá el botón de Cerrar Sesión después -->
+                <span style="color: #1abc9c; margin-right: 15px; font-weight: bold;">Hola, {{ user.username }}</span>
+        
+                <!-- EL NUEVO BOTÓN SEGURO DE LOGOUT -->
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar Sesión</button>
+                </form>
             {% else %}
-                <!-- Aquí irán los futuros botones de Login y Registro -->
-                <span style="color: #bdc3c7; font-style: italic;">(Futuro Login / Registro)</span>
-            {% endif %}
-        </div>
+                <!-- Botones para visitantes -->
+        <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Iniciar Sesión</a>
+        <a href="{% url 'usuario_crear' %}" class="btn btn-warning">Regístrate</a>
+    {% endif %}
+</div>
         
     </header>

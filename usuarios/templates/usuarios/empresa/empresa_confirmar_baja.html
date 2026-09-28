@@ -3,7 +3,6 @@
 {% block title %}Eliminar Empresa {{ empresa.nombre_empresa }} - ChangaMas{% endblock %}
 
 {% block content %}
-<body>
     <h1>Confirmar Eliminación</h1>
     
     <p>¿Estás seguro de que deseas eliminar el perfil de la empresa <strong>{{ object.nombre_empresa }}</strong>?</p>
@@ -16,6 +15,5 @@
         </button>
         <a href="{% url 'empresa_lista' %}" style="margin-left: 10px;">Cancelar y volver</a>
     </form>
-</body>
 
 {% endblock %}

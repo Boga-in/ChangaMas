@@ -3,7 +3,6 @@
 {% block title %}Empleado {{ empleado.usuario.username }} - ChangaMas{% endblock %}
 
 {% block content %}
-<body>
     <h1>Perfil Profesional: {{ empleado.usuario.username }}</h1>
     
     <div style="border: 1px solid #ccc; padding: 15px; max-width: 600px;">
@@ -29,6 +28,5 @@
     </div>
     <br>
     <a href="{% url 'empleado_lista' %}">⬅️ Volver a la lista de empleados</a>
-</body>
 
 {% endblock %}

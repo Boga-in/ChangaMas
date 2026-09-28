@@ -1,20 +1,62 @@
 {% extends 'base.html' %}
 
-{% block title %}Registrarse - ChangaMas{% endblock %}
+{% block title %}{% if object %}Editar Perfil{% else %}Registrarse{% endif %} - ChangaMas{% endblock %}
 
 {% block content %}
-<body>
-    <!-- Si la vista pasa un 'object', significa que estamos editando. Si no, estamos creando -->
-    <h1>{% if object %}Editar Usuario{% else %}Registrar Nuevo Usuario{% endif %}</h1>
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <!-- Centramos la tarjeta dándole un ancho de 6 columnas -->
+        <div class="col-md-6 mx-auto">
+            
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">
+                        {% if object %}Editar Perfil{% else %}Crea tu cuenta{% endif %}
+                    </h2>
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <!-- Renderiza todos los campos de tu creacioUsuarioForm / modificarUsuarioForm -->
-        {{ form.as_p }}
-        
-        <button type="submit">Guardar</button>
-        <a href="{% url 'usuario_lista' %}">Cancelar</a>
-    </form>
-</body>
-{% endblock %}   
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Recorremos los campos uno por uno para darles un buen espaciado -->
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">{{ field.label }}</label>
+                                {{ field }}
+                                
+                                <!-- Si el usuario se equivoca (ej. contraseñas distintas), mostramos el error en rojo -->
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ field.errors.as_text }}
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Si el campo tiene texto de ayuda (como las reglas de la contraseña), lo mostramos -->
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted small">
+                                        {{ field.help_text }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <!-- Botón principal ancho al estilo ML -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {% if object %}Guardar Cambios{% else %}Registrarme{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+
+            {% if not object %}
+                <div class="text-center mt-3">
+                    <p class="text-muted">¿Ya tienes una cuenta? <a href="#" class="text-decoration-none">Inicia sesión</a></p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

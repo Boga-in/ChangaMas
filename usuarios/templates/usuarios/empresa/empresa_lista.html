@@ -3,7 +3,6 @@
 {% block title %}Empresas - ChangaMas{% endblock %}
 
 {% block content %}
-<body>
     <h1>Directorio de Empresas</h1>
     
     <a href="{% url 'empresa_crear' %}">➕ Registrar Nueva Empresa</a>
@@ -23,5 +22,4 @@
             <li>No hay empresas registradas en el sistema todavía.</li>
         {% endfor %}
     </ul>
-</body>
 {% endblock %}

@@ -3,7 +3,6 @@
 {% block title %}Eliminar cuenta - ChangaMas{% endblock %}
 
 {% block content %}
-<body>
     <h1>Confirmar Eliminación</h1>
     
     <p>¿Estás completamente seguro de que deseas eliminar al usuario <strong>{{ object.username }}</strong>?</p>
@@ -14,5 +13,4 @@
         <button type="submit" style="color: red;">Sí, eliminar usuario</button>
         <a href="{% url 'usuario_lista' %}">Cancelar y volver</a>
     </form>
-</body>
 {% endblock %}

@@ -1,5 +1,7 @@
 # users/urls.py
 from django.urls import path
+from django.contrib.auth.views import LoginView, LogoutView
+from .forms import CustomLoginForm
 from .views import (
     EmpleadoCreateView, EmpleadoDeleteView, EmpleadoDetailView, EmpleadoListView, EmpleadoUpdateView,
     EmpresaCreateView, EmpresaDeleteView, EmpresaDetailView, EmpresaListView, EmpresaUpdateView,
@@ -7,6 +9,11 @@ from .views import (
 )
 
 urlpatterns = [
+    # Ruta para entrar
+    path('login/', LoginView.as_view(template_name='usuarios/login.html', authentication_form=CustomLoginForm), name='login'),
+    # Ruta para salir (y que te envíe al inicio al terminar)
+    path('logout/', LogoutView.as_view(next_page='inicio'), name='logout'),
+
     # Rutas para Usuarios
     path('', UsuarioListView.as_view(), name='usuario_lista'),
     path('<int:pk>/', UsuarioDetailView.as_view(), name='usuario_detalle'),

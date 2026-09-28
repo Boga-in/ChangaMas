@@ -84,16 +84,13 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
-
+#IMPORTANTE, QUITE EL COMMON PARA QUE NO HAYA ERRORES DE CONTRASEÑA, PERO EN PRODUCCIÓN HAY QUE PONERLO DE NUEVO
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
@@ -133,3 +130,15 @@ MAILERS = {
 }
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
+
+# ------------------
+# CONFIGURACIÓN DE LOGIN / LOGOUT
+# ------------------
+# Dónde mandar al usuario si intenta entrar a una página prohibida
+LOGIN_URL = 'login'
+
+# A dónde enviarlo justo después de poner su contraseña correctamente
+LOGIN_REDIRECT_URL = 'inicio'
+
+# A dónde enviarlo cuando cierra su sesión
+LOGOUT_REDIRECT_URL = 'inicio'

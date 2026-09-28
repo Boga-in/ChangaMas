@@ -8,22 +8,15 @@ from .models import Publicacion
 def crear_publicacion(request):
     #esto es para que si el usuario no esta logueado no pueda crear publicaciones
     if not request.user.is_authenticated:
-        return redirect('admin:index')  # Redirige a la página de inicio de sesión si el usuario no está autenticado
+        return redirect('login')
     #Si el usuario da al boton guardar
     if request.method == 'POST':
         formulario = PublicacionForm(request.POST, request.FILES)
         
         if formulario.is_valid():
-            # Guardamos la publicación, pero no la confirmamos todavía
-            publicacion = formulario.save(commit=False)
-            # Asignamos el autor de la publicación al usuario que está haciendo la solicitud (Es la manera en que se me ocurrio seguro existe una mejor)
-            publicacion.autor = request.user
-            publicacion.foto_perfil = request.FILES.get('foto_perfil')  # <-- Guardamos la foto de perfil
-            publicacion.save()
-            
-            # Preparamos el cartel de éxito
+            # Como el formulario ya tiene todo, simplemente lo guardamos
+            formulario.save()
             messages.success(request, '¡La publicación se creó correctamente!')
-            # Y enviamos al usuario de vuelta a la página de inicio
             return redirect('inicio')
     
     elif request.method == 'GET':

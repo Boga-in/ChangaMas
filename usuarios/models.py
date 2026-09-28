@@ -5,6 +5,7 @@ class Usuario(AbstractUser):
     dni = models.CharField(max_length=8, unique=True)
     telefono = models.CharField(max_length=15)
     foto = models.ImageField(upload_to='media/fotos_perfil/', null=True, blank=True)
+    es_admin_general = models.BooleanField(default=False)
     def __str__(self):
         return self.username
 

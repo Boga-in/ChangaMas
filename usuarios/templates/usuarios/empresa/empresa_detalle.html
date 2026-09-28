@@ -3,7 +3,6 @@
 {% block title %}Empresa {{ empresa.nombre_empresa }} - ChangaMas{% endblock %}
 
 {% block content %}
-<body>
     <h1>🏢 {{ empresa.nombre_empresa }}</h1>
     
     <div style="border: 1px solid #ccc; padding: 15px; max-width: 600px;">
@@ -23,6 +22,5 @@
     </div>
     <br>
     <a href="{% url 'empresa_lista' %}">⬅️ Volver a la lista de empresas</a>
-</body>
 
 {% endblock %}

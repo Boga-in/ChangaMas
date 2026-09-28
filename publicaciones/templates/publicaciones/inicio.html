@@ -3,32 +3,106 @@
 {% block title %}Inicio - ChangaMas{% endblock %}
 
 {% block content %}
-    <h1>Publicaciones</h1>
+<div class="container mt-4">
 
-    {% if messages %}
-        <div style="background-color: #d4edda; color: green; padding: 10px; border: 1px solid green; margin-bottom: 20px;">
-            {% for message in messages %}
-                <strong>{{ message }}</strong>
-            {% endfor %}
+    <!-- SECCIÓN 1: EL CARRUSEL (Solo para usuarios logueados) -->
+    {% if user.is_authenticated %}
+        <div id="carruselDestacados" class="carousel slide mb-5 shadow-sm rounded" data-bs-ride="carousel">
+            <div class="carousel-inner rounded">
+                <!-- Iteramos solo las primeras 3 publicaciones para no saturar el carrusel -->
+                {% for pub in publicaciones|slice:":3" %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <!-- Si la publicación no tiene foto, usamos un fondo gris por defecto -->
+                        {% if pub.foto %}
+                            <img src="{{ pub.foto.url }}" class="d-block w-100" style="height: 300px; object-fit: cover;" alt="...">
+                        {% else %}
+                            <div class="d-block w-100 bg-secondary" style="height: 300px;"></div>
+                        {% endif %}
+                        
+                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+                            <h5>{% if pub.oferta %}Oferta: {{ pub.oferta.titulo }}{% else %}Búsqueda: {{ pub.busqueda.titulo }}{% endif %}</h5>
+                            <!-- Aca se muestra la descripción pero la limito a 100 caracteres -->
+                            <p>{{ pub.descripcion|truncatechars:100 }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carruselDestacados" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carruselDestacados" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+    {% else %}
+        <!-- Banner genérico para usuarios anónimos invitándolos a unirse -->
+        <div class="p-5 mb-5 bg-primary text-white rounded shadow-sm text-center">
+            <h2>Bienvenido a ChangaMas</h2>
+            <p>La plataforma para encontrar al profesional ideal o tu próximo trabajo.</p>
+            <a href="{% url 'usuario_crear' %}" class="btn btn-light btn-lg">Regístrate para ver todos los detalles</a>
         </div>
     {% endif %}
 
-    <a href="{% url 'crear_publicacion' %}">
-        <button style="padding: 10px 20px; cursor: pointer;">Crear Publicación</button>
-    </a>
-    <a href="{% url 'listar_publicaciones' %}">
-        <button style="padding: 10px 20px; cursor: pointer;">Ver Todas las Publicaciones</button>
-    </a>
-    <br><br>
+    <!-- SECCIÓN 2: LA GRILLA DE TARJETAS -->
+    <h3 class="mb-4">Publicaciones Recientes</h3>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        
+        {% for pub in publicaciones %}
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.2s;">
+                    
+                    <!-- Etiqueta superior (Oferta o Búsqueda) -->
+                    <div class="position-absolute top-0 start-0 m-2">
+                        {% if pub.oferta %}
+                            <span class="badge bg-primary">Oferta</span>
+                        {% elif pub.busqueda %}
+                            <span class="badge bg-success">Búsqueda</span>
+                        {% endif %}
+                    </div>
 
-    {% if user.is_authenticated and user.es_admin_general %}
-        <div style="padding: 15px; border: 2px dashed #007bff; display: inline-block;">
-            <p style="margin-top: 0; color: #007bff;"><strong>Área exclusiva de Administrador:</strong></p>
-            <a href="{% url 'listar_publicaciones' %}">
-                <button style="padding: 10px 20px; cursor: pointer; background-color: #007bff; color: white; border: none;">
-                    Ver lista de todas las publicaciones
-                </button>
-            </a>
-        </div>
-    {% endif %}
+                    {% if pub.foto %}
+                        <img src="{{ pub.foto.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="...">
+                    {% else %}
+                        <!-- Imagen placeholder genérica si no subieron foto -->
+                        <img src="/static/img/avatar_generico.jpg" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Sin imagen">
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h5 class="card-title text-truncate">
+                            {% if pub.oferta %}{{ pub.oferta.titulo }}{% else %}{{ pub.busqueda.titulo }}{% endif %}
+                        </h5>
+                        
+                        <!-- LÓGICA DE VISIBILIDAD -->
+                        {% if user.is_authenticated %}
+                            <!-- Usuario Logueado: Ve toda la descripción y el autor -->
+                            <p class="card-text text-muted" style="font-size: 0.9rem;">{{ pub.descripcion }}</p>
+                            <p class="card-text"><small class="text-muted">
+                                Por: {% if pub.oferta %}{{ pub.oferta.id_empresa.usuario.username }}{% else %}{{ pub.busqueda.id_empleado.usuario.username }}{% endif %}
+                            </small></p>
+                        {% else %}
+                            <!-- Usuario Anónimo: Ve la descripción cortada -->
+                            <p class="card-text text-muted" style="font-size: 0.9rem;">{{ pub.descripcion|truncatechars:60 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-footer bg-white border-top-0 pb-3 text-center">
+                        {% if user.is_authenticated %}
+                            <!-- TODO: Cambiar este href cuando tengas la vista de detalle de publicación armada -->
+                            <button class="btn btn-outline-primary w-100">Ver información completa</button>
+                        {% else %}
+                            <a href="{% url 'usuario_crear' %}" class="btn btn-primary w-100">Regístrate para ver más</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No hay publicaciones disponibles en este momento.</p>
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
 {% endblock %}

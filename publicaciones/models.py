@@ -50,4 +50,9 @@ class Publicacion(models.Model):
     foto = models.ImageField(upload_to='media/fotos_trabajo/', null=True, blank=True)
 
     def __str__(self):
-        return self.titulo
+        # Si tiene oferta, muestra el título de la oferta, si no, el de la búsqueda
+        if self.oferta:
+            return f"Oferta: {self.oferta.titulo}"
+        elif self.busqueda:
+            return f"Búsqueda: {self.busqueda.titulo}"
+        return f"Publicación {self.id}"

@@ -3,7 +3,6 @@
 {% block title %}Empleado crear - ChangaMas{% endblock %}
 
 {% block content %}
-<body>
     <h1>{% if object %}Editar perfil de {{ object.usuario.username }}{% else %}Crear Nuevo Perfil Profesional{% endif %}</h1>
 
     <!-- El enctype es fundamental aquí por el campo CV -->
@@ -15,6 +14,5 @@
         <button type="submit">Guardar Perfil Profesional</button>
         <a href="{% url 'empleado_lista' %}">Cancelar</a>
     </form>
-</body>
 
 {% endblock %}

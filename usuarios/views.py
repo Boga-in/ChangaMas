@@ -1,6 +1,6 @@
 from django.shortcuts import render
 # users/views.py
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Usuario, empleado, empresa
@@ -27,20 +27,20 @@ class UsuarioCreateView(CreateView):
     form_class = creacioUsuarioForm
     template_name = 'usuarios/usuario_form.html'
     # Redirige a la lista después de crear exitosamente
-    success_url = reverse_lazy('usuario_lista') 
+    success_url = reverse_lazy('login') 
 
 # UPDATE: Editar un usuario
-class UsuarioUpdateView(UpdateView):
+class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
     model = Usuario
     form_class = modificarUsuarioForm
     template_name = 'usuarios/usuario_form.html'
-    success_url = reverse_lazy('usuario_lista')
+    success_url = reverse_lazy('login')
 
 # DELETE: Borrar un usuario
-class UsuarioDeleteView(DeleteView):
+class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
     model = Usuario
     template_name = 'usuarios/usuario_confirmar_baja.html'
-    success_url = reverse_lazy('usuario_lista')
+    success_url = reverse_lazy('login')
 
 # ==========================================
 # CRUD PARA EMPLEADOS
@@ -56,21 +56,21 @@ class EmpleadoDetailView(DetailView):
     template_name = 'usuarios/empleado/empleado_detalle.html'
     context_object_name = 'empleado'
 
-class EmpleadoCreateView(CreateView):
+class EmpleadoCreateView(CreateView,LoginRequiredMixin):
     model = empleado
     # Incluimos 'usuario' para que puedas asignarle el perfil a una cuenta existente
     fields = ['usuario', 'fecha_ingreso', 'cargo', 'cv', 'experiencia']
     template_name = 'usuarios/empleado/empleado_form.html'
     success_url = reverse_lazy('empleado_lista')
 
-class EmpleadoUpdateView(UpdateView):
+class EmpleadoUpdateView(UpdateView, LoginRequiredMixin):
     model = empleado
     # Excluimos 'usuario' para que no se pueda transferir el perfil a otra persona al editar
     fields = ['fecha_ingreso', 'cargo', 'cv', 'experiencia']
     template_name = 'usuarios/empleado/empleado_form.html'
     success_url = reverse_lazy('empleado_lista')
 
-class EmpleadoDeleteView(DeleteView):
+class EmpleadoDeleteView(DeleteView, LoginRequiredMixin):
     model = empleado
     template_name = 'usuarios/empleado/empleado_confirmar_baja.html'
     success_url = reverse_lazy('empleado_lista')
@@ -90,19 +90,19 @@ class EmpresaDetailView(DetailView):
     template_name = 'usuarios/empresa/empresa_detalle.html'
     context_object_name = 'empresa'
 
-class EmpresaCreateView(CreateView):
+class EmpresaCreateView(CreateView, LoginRequiredMixin):
     model = empresa
     fields = ['usuario', 'nombre_empresa', 'descripcion', 'direccion', 'telefono', 'website']
     template_name = 'usuarios/empresa/empresa_form.html'
     success_url = reverse_lazy('empresa_lista')
 
-class EmpresaUpdateView(UpdateView):
+class EmpresaUpdateView(UpdateView, LoginRequiredMixin):
     model = empresa
     fields = ['nombre_empresa', 'descripcion', 'direccion', 'telefono', 'website']
     template_name = 'usuarios/empresa/empresa_form.html'
     success_url = reverse_lazy('empresa_lista')
 
-class EmpresaDeleteView(DeleteView):
+class EmpresaDeleteView(DeleteView, LoginRequiredMixin):
     model = empresa
     template_name = 'usuarios/empresa/empresa_confirmar_baja.html'
     success_url = reverse_lazy('empresa_lista')

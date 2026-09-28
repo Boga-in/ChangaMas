@@ -3,7 +3,6 @@
 {% block title %}Perfil de {{ usuario.username }} - ChangaMas{% endblock %}
 
 {% block content %}
-<body>
     <h1>Perfil de {{ usuario.username }}</h1>
     
     <!-- Muestra la foto solo si el usuario subió una -->
@@ -22,5 +21,4 @@
     </ul>
 
     <a href="{% url 'usuario_lista' %}">⬅️ Volver a la lista</a>
-</body>
 {% endblock %}
