@@ -14,7 +14,6 @@ class Habilidad(models.Model):
 class busquedaEmpleo(models.Model):
     id_empleado = models.ForeignKey(empleado, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200)
-    descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     habilidades = models.ManyToManyField(
             Habilidad, 
@@ -27,7 +26,6 @@ class busquedaEmpleo(models.Model):
 class busquedaEmpleado(models.Model):
     id_empresa = models.ForeignKey(empresa, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=200)
-    descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     habilidades_requeridas = models.ManyToManyField(
             Habilidad, 

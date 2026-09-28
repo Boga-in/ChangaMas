@@ -6,9 +6,18 @@ body {
     background-color: #ebebeb; /* Gris para el fondo */
 }
 
+@keyframes breathing {
+    0% { transform: scale(0.9); }
+    50% { transform: scale(1); }
+    100% { transform: scale(0.9); }
+}
 
 .contenedor-grilla {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
+}
+
+.publicacionButton {
+  animation: breathing 5s ease-out infinite normal;
 }
