@@ -45,7 +45,7 @@ class Publicacion(models.Model):
     duracion = models.CharField(max_length=100, null=True, blank=True)
     urgencia = models.CharField(max_length=100, choices=[('urgente', 'Urgente'), ('normal', 'Normal')], default='normal', null=True, blank=True)
     lugar = models.CharField(max_length=100, null=True, blank=True)
-    foto = models.ImageField(upload_to='media/fotos_trabajo/', null=True, blank=True)
+    foto = models.ImageField(upload_to='fotos_trabajo/', null=True, blank=True)
 
     def __str__(self):
         # Si tiene oferta, muestra el título de la oferta, si no, el de la búsqueda

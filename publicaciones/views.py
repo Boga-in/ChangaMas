@@ -59,3 +59,7 @@ def inicio(request):
     
     # Renderizamos la plantilla pasándole el contexto
     return render(request, 'publicaciones/inicio.html', contexto)
+
+def crear_perfil_trabajo(request):
+    # Aquí iría la lógica para crear un perfil de trabajo
+    return render(request, 'publicaciones/crear_perfil_trabajo.html')

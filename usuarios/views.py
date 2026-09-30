@@ -1,10 +1,10 @@
 from django.shortcuts import render
 # users/views.py
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Usuario, empleado, empresa
-from .forms import creacioUsuarioForm, modificarUsuarioForm
+from .forms import EmpleadoForm, creacioUsuarioForm, modificarUsuarioForm
 
 # READ: Lista de todos los usuarios
 class UsuarioListView(UserPassesTestMixin, ListView):
@@ -34,7 +34,9 @@ class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
     model = Usuario
     form_class = modificarUsuarioForm
     template_name = 'usuarios/usuario_form.html'
-    success_url = reverse_lazy('login')
+    def get_success_url(self):
+        # Redirige a la vista del perfil pasando el ID del usuario actualizado
+        return reverse('usuario_detalle', kwargs={'pk': self.object.pk})
 
 # DELETE: Borrar un usuario
 class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
@@ -56,12 +58,19 @@ class EmpleadoDetailView(DetailView):
     template_name = 'usuarios/empleado/empleado_detalle.html'
     context_object_name = 'empleado'
 
-class EmpleadoCreateView(CreateView,LoginRequiredMixin):
+class EmpleadoCreateView(LoginRequiredMixin, CreateView):
     model = empleado
-    # Incluimos 'usuario' para que puedas asignarle el perfil a una cuenta existente
-    fields = ['usuario', 'fecha_ingreso', 'cargo', 'cv', 'experiencia']
+    form_class = EmpleadoForm
     template_name = 'usuarios/empleado/empleado_form.html'
-    success_url = reverse_lazy('empleado_lista')
+
+    def form_valid(self, form):
+        # Asigna el usuario logueado al objeto sin guardarlo aún en la BBDD
+        form.instance.usuario = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Redirige de vuelta al perfil del usuario
+        return reverse('usuario_detalle', kwargs={'pk': self.request.user.pk})
 
 class EmpleadoUpdateView(UpdateView, LoginRequiredMixin):
     model = empleado
@@ -92,8 +101,16 @@ class EmpresaDetailView(DetailView):
 
 class EmpresaCreateView(CreateView, LoginRequiredMixin):
     model = empresa
-    fields = ['usuario', 'nombre_empresa', 'descripcion', 'direccion', 'telefono', 'website']
+    fields = ['nombre_empresa', 'descripcion', 'direccion', 'telefono', 'website']
     template_name = 'usuarios/empresa/empresa_form.html'
+    def form_valid(self, form):
+            # Asigna el usuario logueado al objeto sin guardarlo aún en la BBDD
+            form.instance.usuario = self.request.user
+            return super().form_valid(form)
+    
+    def get_success_url(self):
+        # Redirige de vuelta al perfil del usuario
+        return reverse('usuario_detalle', kwargs={'pk': self.request.user.pk})
     success_url = reverse_lazy('empresa_lista')
 
 class EmpresaUpdateView(UpdateView, LoginRequiredMixin):
