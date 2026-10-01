@@ -22,7 +22,7 @@
                         {% endif %}
                         
                         <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
-                            <h5>{% if pub.oferta %}Oferta: {{ pub.oferta.titulo }}{% else %}Búsqueda: {{ pub.busqueda.titulo }}{% endif %}</h5>
+                            <h5>{% if pub.empleado %}Oferta: {{ pub.empleado.usuario.nombre }}{% else %}Búsqueda: {{ pub.empresa.nombre_empresa }}{% endif %}</h5>
                             <!-- Aca se muestra la descripción pero la limito a 100 caracteres -->
                             <p>{{ pub.descripcion|truncatechars:100 }}</p>
                         </div>
@@ -57,10 +57,10 @@
                     
                     <!-- Etiqueta superior (Oferta o Búsqueda) -->
                     <div class="position-absolute top-0 start-0 m-2">
-                        {% if pub.oferta %}
-                            <span class="badge bg-primary">Oferta</span>
-                        {% elif pub.busqueda %}
-                            <span class="badge bg-success">Búsqueda</span>
+                        {% if pub.empleado.usuario.es_empleado %}
+                            <span class="badge bg-primary">Búsqueda</span>
+                        {% elif pub.empresa.usuario.es_empresa %}
+                            <span class="badge bg-success">Oferta</span>
                         {% endif %}
                     </div>
 
@@ -73,7 +73,7 @@
                     
                     <div class="card-body">
                         <h5 class="card-title text-truncate">
-                            {% if pub.oferta %}{{ pub.oferta.titulo }}{% else %}{{ pub.busqueda.titulo }}{% endif %}
+                            {% if pub.empleado_id.usuario.es_empleado %}{{ pub.empleado_id.usuario.nombre }}{% else %}{{ pub.empresa_id.nombre_empresa }}{% endif %}
                         </h5>
                         
                         <!-- LÓGICA DE VISIBILIDAD -->
@@ -81,7 +81,7 @@
                             <!-- Usuario Logueado: Ve toda la descripción y el autor -->
                             <p class="card-text text-muted" style="font-size: 0.9rem;">{{ pub.descripcion }}</p>
                             <p class="card-text"><small class="text-muted">
-                                Por: {% if pub.oferta %}{{ pub.oferta.id_empresa.usuario.username }}{% else %}{{ pub.busqueda.id_empleado.usuario.username }}{% endif %}
+                                Por: {% if pub.empresa %}{{ pub.empresa.nombre_empresa }}{% else %}{{ pub.empleado.usuario.username }}{% endif %}
                             </small></p>
                         {% else %}
                             <!-- Usuario Anónimo: Ve la descripción cortada -->

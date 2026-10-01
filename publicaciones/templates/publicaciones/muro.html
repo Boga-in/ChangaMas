@@ -22,13 +22,13 @@
                                                         {% elif pub.busqueda %}
                                                             {{ pub.busqueda.id_empleado.usuario.username }} (Empleado)
                                                         {% else %}
-                                                            {{ pub.autor.username }}
+                                                            {{ pub.usuario.username }}
                                                         {% endif %}
                     </small>
                 </div>
             </div>
         {% empty %}
-            <p>Todavía no hay ninguna publicación.</p>
+            <p>No hay publicaciones activas.</p>
         {% endfor %}
     </div>
 {% endblock %}

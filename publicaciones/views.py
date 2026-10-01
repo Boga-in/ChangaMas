@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect  # <-- Agregamos redirect
 from django.http import HttpResponse
 from django.contrib import messages  # <-- Importamos el sistema de mensajes
-from .forms import PublicacionEmpleadoForm, PublicacionEmpresaForm
+from .forms import PublicacionForm
 from .models import Publicacion
 from django.contrib.auth.decorators import login_required
 
@@ -12,28 +12,15 @@ def crear_publicacion(request):
     #   return redirect('login')
     #Si el usuario da al boton guardar
     if request.method == 'POST':
-        # Si el usuario es un empleado, usamos el formulario de empleado sino el de empresa
-        if request.user.es_empleado:
-            formulario = PublicacionEmpleadoForm(request.POST, request.FILES, usuario_actual=request.user)
-        
-            if formulario.is_valid():
-                # Como el formulario ya tiene todo, simplemente lo guardamos
-                formulario.save()
-                messages.success(request, '¡La publicación se creó correctamente!')
-                return redirect('inicio')
-        elif request.user.es_empresa:
-                formulario = PublicacionEmpresaForm(request.POST, request.FILES, usuario_actual=request.user)
-                
-                if formulario.is_valid():
-                    # Como el formulario ya tiene todo, simplemente lo guardamos
-                    formulario.save()
-                    messages.success(request, '¡La publicación se creó correctamente!')
-                    return redirect('inicio')
+        formulario = PublicacionForm(request.POST, request.FILES)
+    
+        if formulario.is_valid():
+            # Como el formulario ya tiene todo, simplemente lo guardamos
+            formulario.save()
+            messages.success(request, '¡La publicación se creó correctamente!')
+            return redirect('inicio')
     elif request.method == 'GET':
-        if request.user.es_empleado:
-            formulario = PublicacionEmpleadoForm(usuario_actual=request.user)
-        elif request.user.es_empresa:
-            formulario = PublicacionEmpresaForm(usuario_actual=request.user)
+        formulario = PublicacionForm()
 
     return render(request, 'publicaciones/crear_publicacion.html', {'formulario': formulario})
 
@@ -59,3 +46,7 @@ def inicio(request):
     
     # Renderizamos la plantilla pasándole el contexto
     return render(request, 'publicaciones/inicio.html', contexto)
+
+def crear_perfil_trabajo(request):
+    # Aquí iría la lógica para crear un perfil de trabajo
+    return render(request, 'publicaciones/crear_perfil_trabajo.html')

@@ -11,46 +11,27 @@ class Habilidad(models.Model):
     def __str__(self):
         return self.nombre
 
-class busquedaEmpleo(models.Model):
-    id_empleado = models.ForeignKey(empleado, on_delete=models.CASCADE)
-    titulo = models.CharField(max_length=200)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-    habilidades = models.ManyToManyField(
-            Habilidad, 
-            blank=True, 
-            related_name='empleados'
-        )
-    def __str__(self):
-        return self.titulo
-    
-class busquedaEmpleado(models.Model):
-    id_empresa = models.ForeignKey(empresa, on_delete=models.CASCADE)
-    titulo = models.CharField(max_length=200)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
-    habilidades_requeridas = models.ManyToManyField(
-            Habilidad, 
-            blank=True, 
-            related_name='ofertas'
-        )
-    def __str__(self):
-        return self.titulo
-
-
 
 class Publicacion(models.Model):
-    oferta = models.ForeignKey(busquedaEmpleado, on_delete=models.CASCADE, null=True, blank=True)
-    busqueda = models.ForeignKey(busquedaEmpleo, on_delete=models.CASCADE, null=True, blank=True)
+    empresa = models.ForeignKey(empresa, on_delete=models.CASCADE, null=True, blank=True)
+    empleado = models.ForeignKey(empleado, on_delete=models.CASCADE, null=True, blank=True)
     estado = models.CharField(max_length=20, choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')], default='activo', null=True, blank=True)
     descripcion = models.TextField()
     duracion = models.CharField(max_length=100, null=True, blank=True)
     urgencia = models.CharField(max_length=100, choices=[('urgente', 'Urgente'), ('normal', 'Normal')], default='normal', null=True, blank=True)
     lugar = models.CharField(max_length=100, null=True, blank=True)
-    foto = models.ImageField(upload_to='media/fotos_trabajo/', null=True, blank=True)
-
+    foto = models.ImageField(upload_to='fotos_trabajo/', null=True, blank=True)
+    titulo = models.CharField(max_length=200, null=True, blank=True)
+    precio = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True, blank=True)
+    habilidades = models.ManyToManyField(
+            Habilidad, 
+            blank=True, 
+            related_name='requerimientos'
+        )
     def __str__(self):
         # Si tiene oferta, muestra el título de la oferta, si no, el de la búsqueda
-        if self.oferta:
-            return f"Oferta: {self.oferta.titulo}"
-        elif self.busqueda:
-            return f"Búsqueda: {self.busqueda.titulo}"
+        if self.empresa:
+            return f"Oferta: {self.empresa.nombre_empresa}"
+        elif self.empleado:
+            return f"Búsqueda: {self.empleado.usuario.nombre}"
         return f"Publicación {self.id}"

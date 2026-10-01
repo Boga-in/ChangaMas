@@ -23,23 +23,26 @@ class modificarUsuarioForm(UserChangeForm):
         fields = ('username', 'email', 'first_name', 'last_name','dni','telefono', 'foto' )
 
 class EmpleadoForm(forms.ModelForm):
-    # 1. Sobrescribes el campo aquí arriba para indicarle qué formatos aceptas
     fecha_ingreso = forms.DateField(
-        input_formats=['%d-%m-%Y', '%d/%m/%Y'], # Acepta con guiones o barras
+        input_formats=['%d-%m-%Y', '%d/%m/%Y'],
         widget=forms.DateInput(
-            # 2. Obligas al widget a mostrarlo en este formato
-            format='%d-%m-%Y', 
+            format='%d/%m/%Y', 
             attrs={
-
                 'type': 'text', 
-                'placeholder': 'dd-mm-aaaa',
+                'placeholder': 'dd/mm/aaaa',
                 'class': 'form-control'
             }
         )
     )
+
     class Meta:
         model = empleado
-        fields = ['usuario', 'fecha_ingreso', 'cargo', 'cv', 'experiencia']
+        fields = ['fecha_ingreso', 'cargo', 'cv', 'experiencia']
+        widgets = {
+            'cargo': forms.TextInput(attrs={'class': 'form-control'}),
+            'experiencia': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'cv': forms.FileInput(attrs={'class': 'form-control'}),
+        }
 
 class CustomLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
