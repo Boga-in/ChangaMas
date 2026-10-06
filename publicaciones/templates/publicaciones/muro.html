@@ -7,14 +7,28 @@
         {% for pub in publicaciones %}
             <div style="border: 1px solid blue; padding: 10px;">
                 <div>
-                    <h4>{{ pub.titulo }}</h4>
+                    <h4>{% if pub.oferta %}
+                            <span class="badge bg-primary">Oferta</span> {{ pub.oferta.titulo }}
+                        {% elif pub.busqueda %}
+                            <span class="badge bg-success">Búsqueda</span> {{ pub.busqueda.titulo }}
+                        {% else %}
+                            <span class="badge bg-secondary">Publicación General</span>         
+                        {% endif %}
+                    </h4>
                     <img src="{{ pub.foto.url }}" width="100" height="100" alt="Imagen del trabajo">
                     <p>{{ pub.descripcion }}</p>
-                    <small><strong>Creado por:</strong> {{ pub.autor.username }}</small>
+                    <small><strong>Creado por:</strong> {% if pub.oferta %}
+                                                            {{ pub.oferta.id_empresa.usuario.username }} (Empresa)
+                                                        {% elif pub.busqueda %}
+                                                            {{ pub.busqueda.id_empleado.usuario.username }} (Empleado)
+                                                        {% else %}
+                                                            {{ pub.usuario.username }}
+                                                        {% endif %}
+                    </small>
                 </div>
             </div>
         {% empty %}
-            <p>Todavía no hay ninguna publicación.</p>
+            <p>No hay publicaciones activas.</p>
         {% endfor %}
     </div>
 {% endblock %}

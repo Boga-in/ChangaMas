@@ -5,6 +5,7 @@ from django.views.generic import CreateView,ListView,DetailView,UpdateView,Delet
 
 from .forms import PublicacionForm
 from .models import Publicacion
+from django.contrib.auth.decorators import login_required
 
 #Vista basada en clase para crear una publicacion (Create)
 class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):

@@ -3,20 +3,33 @@
         <a href="{% url 'inicio' %}">ChangaMas</a>
     </div>
 
-    <nav class="nav-links">
-        <a href="{% url 'inicio' %}">Inicio</a>
-        <a href="{% url 'publicaciones:crear' %}">Perfil</a> 
-    </nav>
+        <!-- NAVEGACIÓN CENTRAL -->
+        <nav>
+            <a href="{% url 'inicio' %}" style="color: white; text-decoration: none; margin-right: 20px;">Inicio</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'usuario_detalle' user.pk %}" style="color: white; text-decoration: none; margin-right: 20px;">Perfil</a> 
+            {% endif %}
+            {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'listar_publicaciones' %}" style="color: white; text-decoration: none; margin-right: 20px;">Publicaciones</a>
+                <a href="{% url 'usuario_lista' %}" style="color: white; text-decoration: none; margin-right: 20px;">Usuarios</a>
+            {% endif %}
+        </nav>
 
-    <div class="user-zone">
-        {% if user.is_authenticated %}
-            <span class="user-name">Hola, {{ user.username }}</span>
-            <form action="{% url 'admin:logout' %}" method="POST" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn-link-danger">Cerrar Sesión</button>
-            </form>
-        {% else %}
-            <span class="user-muted">(Futuro Login / Registro)</span>
-        {% endif %}
-    </div>
-</header>
+        <!-- ZONA DE USUARIO -->
+        <div>
+            {% if user.is_authenticated %}
+                <span style="color: #1abc9c; margin-right: 15px; font-weight: bold;">Hola, {{ user.username }}</span>
+        
+                <!-- EL NUEVO BOTÓN SEGURO DE LOGOUT -->
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar Sesión</button>
+                </form>
+            {% else %}
+                <!-- Botones para visitantes -->
+        <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Iniciar Sesión</a>
+        <a href="{% url 'usuario_crear' %}" class="btn btn-warning">Regístrate</a>
+    {% endif %}
+</div>
+        
+    </header>
