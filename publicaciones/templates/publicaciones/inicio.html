@@ -47,63 +47,75 @@
         </div>
     {% endif %}
 
+    <!-- BUSCADOR -->
+    <div class="row mb-4">
+        <div class="col">
+            <form method="GET" action="{% url 'inicio' %}">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar publicaciones..." name="q">
+                    <button class="btn btn-outline-primary" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- SECCIÓN 2: LA GRILLA DE TARJETAS -->
     <h3 class="mb-4">Publicaciones Recientes</h3>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        
-        {% for pub in publicaciones %}
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.2s;">
-                    
-                    <!-- Etiqueta superior (Oferta o Búsqueda) -->
-                    <div class="position-absolute top-0 start-0 m-2">
-                        {% if pub.empleado.usuario.es_empleado %}
-                            <span class="badge bg-primary">Búsqueda</span>
-                        {% elif pub.empresa.usuario.es_empresa %}
-                            <span class="badge bg-success">Oferta</span>
-                        {% endif %}
-                    </div>
-
-                    {% if pub.foto %}
-                        <img src="{{ pub.foto.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="...">
-                    {% else %}
-                        <!-- Imagen placeholder genérica si no subieron foto -->
-                        <img src="/static/img/avatar_generico.jpg" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Sin imagen">
-                    {% endif %}
-                    
-                    <div class="card-body">
-                        <h5 class="card-title text-truncate">
-                            {% if pub.empleado_id.usuario.es_empleado %}{{ pub.empleado_id.usuario.nombre }}{% else %}{{ pub.empresa_id.nombre_empresa }}{% endif %}
-                        </h5>
+            {% for pub in publicaciones %}
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.2s;">
                         
-                        <!-- LÓGICA DE VISIBILIDAD -->
-                        {% if user.is_authenticated %}
-                            <!-- Usuario Logueado: Ve toda la descripción y el autor -->
-                            <p class="card-text text-muted" style="font-size: 0.9rem;">{{ pub.descripcion }}</p>
-                            <p class="card-text"><small class="text-muted">
-                                Por: {% if pub.empresa %}{{ pub.empresa.nombre_empresa }}{% else %}{{ pub.empleado.usuario.username }}{% endif %}
-                            </small></p>
-                        {% else %}
-                            <!-- Usuario Anónimo: Ve la descripción cortada -->
-                            <p class="card-text text-muted" style="font-size: 0.9rem;">{{ pub.descripcion|truncatechars:60 }}</p>
-                        {% endif %}
-                    </div>
+                        <!-- Etiqueta superior (Oferta o Búsqueda) -->
+                        <div class="position-absolute top-0 start-0 m-2">
+                            {% if pub.empleado.usuario.es_empleado %}
+                                <span class="badge bg-primary">Búsqueda</span>
+                            {% elif pub.empresa.usuario.es_empresa %}
+                                <span class="badge bg-success">Oferta</span>
+                            {% endif %}
+                        </div>
 
-                    <div class="card-footer bg-white border-top-0 pb-3 text-center">
-                        {% if user.is_authenticated %}
-                            <!-- TODO: Cambiar este href cuando tengas la vista de detalle de publicación armada -->
-                            <button class="btn btn-outline-primary w-100">Ver información completa</button>
+                        {% if pub.foto %}
+                            <img src="{{ pub.foto.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="...">
                         {% else %}
-                            <a href="{% url 'usuario_crear' %}" class="btn btn-primary w-100">Regístrate para ver más</a>
+                            <!-- Imagen placeholder genérica si no subieron foto -->
+                            <img src="/static/img/avatar_generico.jpg" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Sin imagen">
                         {% endif %}
+                        
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate">
+                                {% if pub.empleado_id.usuario.es_empleado %}{{ pub.empleado_id.usuario.nombre }}{% else %}{{ pub.empresa_id.nombre_empresa }}{% endif %}
+                            </h5>
+                            
+                            <!-- LÓGICA DE VISIBILIDAD -->
+                            {% if user.is_authenticated %}
+                                <!-- Usuario Logueado: Ve toda la descripción y el autor -->
+                                <p class="card-title"> {{ pub.titulo }} </p>
+                                <p class="card-text text-muted" style="font-size: 0.9rem;">{{ pub.descripcion }}</p>
+                                <p class="card-text"><small class="text-muted">
+                                    Por: {% if pub.empresa %}{{ pub.empresa.nombre_empresa }}{% elif pub.empleado %}{{ pub.empleado.user.username }}{% else %}{{user.username}}{% endif %}
+                                </small></p>
+                            {% else %}
+                                <!-- Usuario Anónimo: Ve la descripción cortada -->
+                                <p class="card-text text-muted" style="font-size: 0.9rem;">{{ pub.descripcion|truncatechars:60 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="card-footer bg-white border-top-0 pb-3 text-center">
+                            {% if user.is_authenticated %}
+                                <!-- TODO: Cambiar este href cuando tengas la vista de detalle de publicación armada -->
+                                <button class="btn btn-outline-primary w-100">Ver información completa</button>
+                            {% else %}
+                                <a href="{% url 'usuario_crear' %}" class="btn btn-primary w-100">Regístrate para ver más</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% empty %}
-            <div class="col-12 text-center">
-                <p class="text-muted">No hay publicaciones disponibles en este momento.</p>
-            </div>
-        {% endfor %}
+            {% empty %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">No hay publicaciones disponibles en este momento.</p>
+                </div>
+            {% endfor %}
 
     </div>
 </div>

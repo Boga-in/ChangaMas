@@ -38,13 +38,18 @@ def inicio(request):
     # Traemos todas las publicaciones de la base de datos. 
     # .order_by('-id') las ordena de la más nueva a la más vieja)
     publicaciones_recientes = Publicacion.objects.all().order_by('-id')
-    
-    # Armamos el contexto para pasarlo al HTML
+    termino_busqueda = request.GET.get('q')
+        
+    if termino_busqueda:
+            # __icontains busca coincidencias parciales sin importar mayúsculas/minúsculas
+            publicaciones_recientes = publicaciones_recientes.filter(titulo__icontains=termino_busqueda)
+        
     contexto = {
-        'publicaciones': publicaciones_recientes
+        'publicaciones': publicaciones_recientes,
+        'busqueda': termino_busqueda
     }
-    
-    # Renderizamos la plantilla pasándole el contexto
+
+    # 5. Envías el contexto al template
     return render(request, 'publicaciones/inicio.html', contexto)
 
 def crear_perfil_trabajo(request):
