@@ -34,4 +34,4 @@ class Publicacion(models.Model):
             return f"Oferta: {self.empresa.nombre_empresa}"
         elif self.empleado:
             return f"Búsqueda: {self.empleado.usuario.nombre}"
-        return f"Publicación {self.id}"
+        return {self.id}

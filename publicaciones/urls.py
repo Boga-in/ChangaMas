@@ -7,6 +7,7 @@ from .views import (
     PublicacionUpdateView,
     PublicacionDeleteView,
     MisPublicacionesListView,
+    CrearPerfilTrabajoView
 )
 
 app_name = 'publicaciones'
@@ -19,4 +20,5 @@ urlpatterns = [
     path('<int:pk>/', PublicacionDetailView.as_view(), name='detalle'),
     path('<int:pk>/editar/', PublicacionUpdateView.as_view(), name='editar'),
     path('<int:pk>/eliminar/', PublicacionDeleteView.as_view(), name='eliminar'),
+    path('crear_perfil_trabajo/', CrearPerfilTrabajoView, name='crear_perfil_trabajo'),
 ]

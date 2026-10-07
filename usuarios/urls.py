@@ -12,7 +12,7 @@ urlpatterns = [
     # Ruta para entrar
     path('login/', LoginView.as_view(template_name='usuarios/login.html', authentication_form=CustomLoginForm), name='login'),
     # Ruta para salir (y que te envíe al inicio al terminar)
-    path('logout/', LogoutView.as_view(next_page='inicio'), name='logout'),
+    path('logout/', LogoutView.as_view(next_page='publicaciones:inicio'), name='logout'),
 
     # Rutas para Usuarios
     path('usuarios', UsuarioListView.as_view(), name='usuario_lista'),

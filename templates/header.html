@@ -10,6 +10,7 @@
             {% endif %}
             {% if user.is_authenticated and user.is_staff %}
                 <a href="{% url 'usuario_lista' %}" style="color: white; text-decoration: none; margin-right: 20px;">Usuarios</a>
+                <a href="{% url 'publicaciones:lista' %}" style="color: white; text-decoration: none; margin-right: 20px;">Publicaciones</a>
             {% endif %}
         </nav>
 

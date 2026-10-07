@@ -46,7 +46,17 @@
             <a href="{% url 'usuario_crear' %}" class="btn btn-light btn-lg">Regístrate para ver todos los detalles</a>
         </div>
     {% endif %}
-
+    <!-- BUSCADOR -->
+    <div class="row mb-4">
+        <div class="col">
+            <form method="GET" action="{% url 'publicaciones:inicio' %}">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar publicaciones..." name="q">
+                    <button class="btn btn-outline-primary" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- SECCIÓN 2: LA GRILLA DE TARJETAS -->
     <h3 class="mb-4">Publicaciones Recientes</h3>
     <div class="row row-cols-1 row-cols-md-3 g-4">
