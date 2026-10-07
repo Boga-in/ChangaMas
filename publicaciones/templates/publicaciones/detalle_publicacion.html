@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ publicacion.titulo }} - ChangaMas{% endblock %}
-
 {% block content %}
     <h1>{{ publicacion.titulo }}</h1>
     <p><strong>Publicado por:</strong> {{ publicacion.autor.username }}</p>

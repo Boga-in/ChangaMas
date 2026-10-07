@@ -1,18 +1,25 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView
+from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,TemplateView
 
 from .forms import PublicacionForm
 from .models import Publicacion
 from django.contrib.auth.decorators import login_required
 
 #Vista basada en clase para crear una publicacion (Create)
+
+class InicioView(ListView):
+    model = Publicacion
+    template_name = 'publicaciones/listar_publicaciones.html'
+    context_object_name = 'publicaciones'
+    paginate_by = 10
+
 class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Publicacion
     form_class = PublicacionForm
     template_name = 'publicaciones/crear_publicacion.html'
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('publicaciones:mis_publicaciones')
     success_message = '¡La publicación se creó correctamente!'
 
     def form_valid(self, form):
@@ -20,7 +27,7 @@ class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
         return super().form_valid(form)
     
 #Vista basada en clase para ver una publicacion (Read)
-class PublicacionDetailView(DetailView):
+class PublicacionDetailView(LoginRequiredMixin,DetailView):
     model = Publicacion
     template_name = 'publicaciones/detalle_publicacion.html'
     context_object_name = 'publicacion'
@@ -28,9 +35,18 @@ class PublicacionDetailView(DetailView):
 #Vista basada en clase para Listar las publicaciones
 class PublicacionListView(ListView):
     model = Publicacion
-    template_name = 'publicaciones/lista_publicaciones.html'
+    template_name = 'publicaciones/listar_publicaciones.html'
     context_object_name = 'publicaciones'
     paginate_by = 10
+
+class MisPublicacionesListView(LoginRequiredMixin, ListView):
+    model = Publicacion
+    template_name = 'publicaciones/mis_publicaciones.html'
+    context_object_name = 'publicaciones'
+
+    def get_queryset(self):
+        # Filtra únicamente las publicaciones donde el autor es el usuario logueado
+        return Publicacion.objects.filter(autor=self.request.user).order_by('-id')
 
 #Vista basada en clase para Editar una publicacion (Update)
 class PublicacionUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):

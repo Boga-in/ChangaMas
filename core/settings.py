@@ -132,16 +132,9 @@ MAILERS = {
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 
+# Ruta login
+LOGIN_URL = 'admin:login'
 
-# ------------------
-# CONFIGURACIÓN DE LOGIN / LOGOUT
-# ------------------
-# Dónde mandar al usuario si intenta entrar a una página prohibida
-LOGIN_URL = 'login'
-
-# A dónde enviarlo justo después de poner su contraseña correctamente
-LOGIN_REDIRECT_URL = 'inicio'
-
-# A dónde enviarlo cuando cierra su sesión
-
-LOGOUT_REDIRECT_URL = 'inicio'
+# rutas al cerrar o iniciar sesion
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'

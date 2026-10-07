@@ -2,14 +2,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from publicaciones.views import inicio 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    path('', inicio, name='inicio'), 
-    
-    path('publicaciones/', include('publicaciones.urls')),
+        
+    path('', include('publicaciones.urls')),
     path('usuarios/', include('usuarios.urls')),
 ]
 
