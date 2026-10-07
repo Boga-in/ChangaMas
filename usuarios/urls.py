@@ -15,7 +15,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='inicio'), name='logout'),
 
     # Rutas para Usuarios
-    path('', UsuarioListView.as_view(), name='usuario_lista'),
+    path('usuarios', UsuarioListView.as_view(), name='usuario_lista'),
     path('<int:pk>/', UsuarioDetailView.as_view(), name='usuario_detalle'),
     path('nuevo/', UsuarioCreateView.as_view(), name='usuario_crear'),
     path('<int:pk>/editar/', UsuarioUpdateView.as_view(), name='usuario_editar'),

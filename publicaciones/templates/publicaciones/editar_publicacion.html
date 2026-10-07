@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Publicación - ChangaMas{% endblock %}
+
+{% block content %}
+    <h1>Editar Publicación: {{ publicacion.titulo }}</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar Cambios</button>
+        <a href="{% url 'publicaciones:detalle' publicacion.pk %}">Cancelar</a>
+    </form>
+{% endblock %}

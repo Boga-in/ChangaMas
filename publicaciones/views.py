@@ -1,57 +1,73 @@
-from django.shortcuts import render, redirect  # <-- Agregamos redirect
-from django.http import HttpResponse
-from django.contrib import messages  # <-- Importamos el sistema de mensajes
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,TemplateView
+
 from .forms import PublicacionForm
 from .models import Publicacion
 from django.contrib.auth.decorators import login_required
 
-@login_required
-def crear_publicacion(request):
-    #esto es para que si el usuario no esta logueado no pueda crear publicaciones
-    #if not request.user.is_authenticated:
-    #   return redirect('login')
-    #Si el usuario da al boton guardar
-    if request.method == 'POST':
-        formulario = PublicacionForm(request.POST, request.FILES)
+#Vista basada en clase para crear una publicacion (Create)
+
+class InicioView(ListView):
+    model = Publicacion
+    template_name = 'publicaciones/listar_publicaciones.html'
+    context_object_name = 'publicaciones'
+    paginate_by = 10
+
+class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Publicacion
+    form_class = PublicacionForm
+    template_name = 'publicaciones/crear_publicacion.html'
+    success_url = reverse_lazy('publicaciones:mis_publicaciones')
+    success_message = '¡La publicación se creó correctamente!'
+
+    def form_valid(self, form):
+        form.instance.autor = self.request.user
+        return super().form_valid(form)
     
-        if formulario.is_valid():
-            # Como el formulario ya tiene todo, simplemente lo guardamos
-            formulario.save()
-            messages.success(request, '¡La publicación se creó correctamente!')
-            return redirect('inicio')
-    elif request.method == 'GET':
-        formulario = PublicacionForm()
+#Vista basada en clase para ver una publicacion (Read)
+class PublicacionDetailView(LoginRequiredMixin,DetailView):
+    model = Publicacion
+    template_name = 'publicaciones/detalle_publicacion.html'
+    context_object_name = 'publicacion'
 
-    return render(request, 'publicaciones/crear_publicacion.html', {'formulario': formulario})
+#Vista basada en clase para Listar las publicaciones
+class PublicacionListView(ListView):
+    model = Publicacion
+    template_name = 'publicaciones/listar_publicaciones.html'
+    context_object_name = 'publicaciones'
+    paginate_by = 10
 
-def listar_publicaciones(request):
-    # Traemos TODOS los registros de la tabla Publicacion
-    publicaciones_guardadas = Publicacion.objects.all()
-    # Seguridad básica: bloqueamos a quienes no tengan la sesión iniciada o no sean admin_general
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return render(request, 'publicaciones/muro.html', {'publicaciones': publicaciones_guardadas})    
-    
-    # Enviamos la lista a una nueva plantilla HTML
-    return render(request, 'publicaciones/lista_publicaciones.html', {'publicaciones': publicaciones_guardadas})
+class MisPublicacionesListView(LoginRequiredMixin, ListView):
+    model = Publicacion
+    template_name = 'publicaciones/mis_publicaciones.html'
+    context_object_name = 'publicaciones'
 
-def inicio(request):
-    # Traemos todas las publicaciones de la base de datos. 
-    # .order_by('-id') las ordena de la más nueva a la más vieja)
-    publicaciones_recientes = Publicacion.objects.all().order_by('-id')
-    termino_busqueda = request.GET.get('q')
-        
-    if termino_busqueda:
-            # __icontains busca coincidencias parciales sin importar mayúsculas/minúsculas
-            publicaciones_recientes = publicaciones_recientes.filter(titulo__icontains=termino_busqueda)
-        
-    contexto = {
-        'publicaciones': publicaciones_recientes,
-        'busqueda': termino_busqueda
-    }
+    def get_queryset(self):
+        # Filtra únicamente las publicaciones donde el autor es el usuario logueado
+        return Publicacion.objects.filter(autor=self.request.user).order_by('-id')
 
-    # 5. Envías el contexto al template
-    return render(request, 'publicaciones/inicio.html', contexto)
+#Vista basada en clase para Editar una publicacion (Update)
+class PublicacionUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+    model = Publicacion
+    form_class = PublicacionForm
+    template_name = 'publicaciones/editar_publicacion.html'
+    success_url = reverse_lazy('inicio')
+    success_message = '¡La publicación se actualizó correctamente!'
 
-def crear_perfil_trabajo(request):
-    # Aquí iría la lógica para crear un perfil de trabajo
-    return render(request, 'publicaciones/crear_perfil_trabajo.html')
+    def test_func(self):
+        publicacion = self.get_object()
+        return self.request.user == publicacion.autor
+
+
+#Vista basada en clase para Eliminar una publicacion (Update)
+class PublicacionDeleteView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+    model = Publicacion
+    template_name = 'publicaciones/confirmar_eliminar.html'
+    success_url = reverse_lazy('inicio')
+    success_message = 'La publicación fue eliminada con éxito.'
+
+    def test_func(self):
+        publicacion = self.get_object()
+        return self.request.user == publicacion.autor

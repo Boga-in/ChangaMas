@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container mt-4">
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn btn-primary btn-lg publicacionButton "><a href="{% url 'crear_publicacion' %}" class="text-white text-decoration-none">Publicar</a></button>
+        <button class="btn btn-primary btn-lg publicacionButton "><a href="{% url 'publicaciones:crear' %}" class="text-white text-decoration-none">Publicar</a></button>
     </div>
     <!-- SECCIÓN 1: EL CARRUSEL (Solo para usuarios logueados) -->
     {% if user.is_authenticated %}
@@ -46,18 +46,6 @@
             <a href="{% url 'usuario_crear' %}" class="btn btn-light btn-lg">Regístrate para ver todos los detalles</a>
         </div>
     {% endif %}
-
-    <!-- BUSCADOR -->
-    <div class="row mb-4">
-        <div class="col">
-            <form method="GET" action="{% url 'inicio' %}">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Buscar publicaciones..." name="q">
-                    <button class="btn btn-outline-primary" type="submit">Buscar</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- SECCIÓN 2: LA GRILLA DE TARJETAS -->
     <h3 class="mb-4">Publicaciones Recientes</h3>

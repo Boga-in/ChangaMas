@@ -59,7 +59,9 @@ TEMPLATES = [
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': True,
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -69,7 +71,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
@@ -131,14 +132,9 @@ MAILERS = {
 
 AUTH_USER_MODEL = 'usuarios.Usuario'
 
-# ------------------
-# CONFIGURACIÓN DE LOGIN / LOGOUT
-# ------------------
-# Dónde mandar al usuario si intenta entrar a una página prohibida
-LOGIN_URL = 'login'
+# Ruta login
+LOGIN_URL = 'admin:login'
 
-# A dónde enviarlo justo después de poner su contraseña correctamente
-LOGIN_REDIRECT_URL = 'inicio'
-
-# A dónde enviarlo cuando cierra su sesión
-LOGOUT_REDIRECT_URL = 'inicio'
+# rutas al cerrar o iniciar sesion
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
