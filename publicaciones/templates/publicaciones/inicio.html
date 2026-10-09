@@ -1,120 +1,65 @@
 {% extends 'base.html' %}
 
-{% block title %}Inicio - ChangaMas{% endblock %}
+{% block title %}Bienvenida - ChangaMas{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn btn-primary btn-lg publicacionButton "><a href="{% url 'publicaciones:crear' %}" class="text-white text-decoration-none">Publicar</a></button>
-    </div>
-    <!-- SECCIÓN 1: EL CARRUSEL (Solo para usuarios logueados) -->
-    {% if user.is_authenticated %}
-        <div id="carruselDestacados" class="carousel slide mb-5 shadow-sm rounded" data-bs-ride="carousel">
-            <div class="carousel-inner rounded">
-                <!-- Iteramos solo las primeras 3 publicaciones para no saturar el carrusel -->
-                {% for pub in publicaciones|slice:":3" %}
-                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <!-- Si la publicación no tiene foto, usamos un fondo gris por defecto -->
-                        {% if pub.foto %}
-                            <img src="{{ pub.foto.url }}" class="d-block w-100" style="height: 300px; object-fit: cover;" alt="...">
-                        {% else %}
-                            <div class="d-block w-100 bg-secondary" style="height: 300px;"></div>
-                        {% endif %}
-                        
-                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
-                            <h5>{% if pub.empleado %}Oferta: {{ pub.empleado.usuario.nombre }}{% else %}Búsqueda: {{ pub.empresa.nombre_empresa }}{% endif %}</h5>
-                            <!-- Aca se muestra la descripción pero la limito a 100 caracteres -->
-                            <p>{{ pub.descripcion|truncatechars:100 }}</p>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carruselDestacados" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Anterior</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carruselDestacados" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Siguiente</span>
-            </button>
-        </div>
-    {% else %}
-        <!-- Banner genérico para usuarios anónimos invitándolos a unirse -->
-        <div class="p-5 mb-5 bg-primary text-white rounded shadow-sm text-center">
-            <h2>Bienvenido a ChangaMas</h2>
-            <p>La plataforma para encontrar al profesional ideal o tu próximo trabajo.</p>
-            <a href="{% url 'usuario_crear' %}" class="btn btn-light btn-lg">Regístrate para ver todos los detalles</a>
-        </div>
-    {% endif %}
-    <!-- BUSCADOR -->
-    <div class="row mb-4">
-        <div class="col">
-            <form method="GET" action="{% url 'publicaciones:inicio' %}">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Buscar publicaciones..." name="q">
-                    <button class="btn btn-outline-primary" type="submit">Buscar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <!-- SECCIÓN 2: LA GRILLA DE TARJETAS -->
-    <h3 class="mb-4">Publicaciones Recientes</h3>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for pub in publicaciones %}
-                <div class="col">
-                    <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.2s;">
-                        
-                        <!-- Etiqueta superior (Oferta o Búsqueda) -->
-                        <div class="position-absolute top-0 start-0 m-2">
-                            {% if pub.empleado.usuario.es_empleado %}
-                                <span class="badge bg-primary">Búsqueda</span>
-                            {% elif pub.empresa.usuario.es_empresa %}
-                                <span class="badge bg-success">Oferta</span>
-                            {% endif %}
-                        </div>
 
-                        {% if pub.foto %}
-                            <img src="{{ pub.foto.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="...">
-                        {% else %}
-                            <!-- Imagen placeholder genérica si no subieron foto -->
-                            <img src="/static/img/avatar_generico.jpg" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Sin imagen">
-                        {% endif %}
-                        
-                        <div class="card-body">
-                            <h5 class="card-title text-truncate">
-                                {% if pub.empleado_id.usuario.es_empleado %}{{ pub.empleado_id.usuario.nombre }}{% else %}{{ pub.empresa_id.nombre_empresa }}{% endif %}
-                            </h5>
-                            
-                            <!-- LÓGICA DE VISIBILIDAD -->
-                            {% if user.is_authenticated %}
-                                <!-- Usuario Logueado: Ve toda la descripción y el autor -->
-                                <p class="card-title"> {{ pub.titulo }} </p>
-                                <p class="card-text text-muted" style="font-size: 0.9rem;">{{ pub.descripcion }}</p>
-                                <p class="card-text"><small class="text-muted">
-                                    Por: {% if pub.empresa %}{{ pub.empresa.nombre_empresa }}{% elif pub.empleado %}{{ pub.empleado.user.username }}{% else %}{{user.username}}{% endif %}
-                                </small></p>
-                            {% else %}
-                                <!-- Usuario Anónimo: Ve la descripción cortada -->
-                                <p class="card-text text-muted" style="font-size: 0.9rem;">{{ pub.descripcion|truncatechars:60 }}</p>
-                            {% endif %}
-                        </div>
+<div class="hero-section">
+    <div class="container">
+        <span class="badge-provincia">📍 Hecho en Chubut</span>
+        
+        <h1 class="hero-title">
+            Potenciamos el trabajo local en <span>ChangaMas</span>
+        </h1>
+        
+        <p class="hero-subtitle">
+            Conocemos la realidad de nuestra provincia y sabemos que gran parte de nuestra comunidad se gana la vida con su esfuerzo diario. Creamos el espacio que necesitabas para conectar, organizarte y profesionalizar tu oficio.
+        </p>
 
-                        <div class="card-footer bg-white border-top-0 pb-3 text-center">
-                            {% if user.is_authenticated %}
-                                <!-- TODO: Cambiar este href cuando tengas la vista de detalle de publicación armada -->
-                                <button class="btn btn-outline-primary w-100">Ver información completa</button>
-                            {% else %}
-                                <a href="{% url 'usuario_crear' %}" class="btn btn-primary w-100">Regístrate para ver más</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            {% empty %}
-                <div class="col-12 text-center">
-                    <p class="text-muted">No hay publicaciones disponibles en este momento.</p>
-                </div>
-            {% endfor %}
-
+        <div class="cta-group">
+            <a href="{% url 'usuario_crear' %}" class="btn-primary">Sumarme a ChangaMas</a>
+            <a href="{% url 'login' %}" class="btn-secondary">Ya tengo una cuenta</a>
+        </div>
     </div>
 </div>
+
+<div class="container">
+    <div class="manifesto-box">
+        <p class="manifesto-text">
+            "Sabemos que no siempre es fácil ubicar a tu público objetivo. Por eso queremos darte un espacio donde puedas promocionarte, mostrar tus resultados, organizarte con tus clientes y construir un perfil profesional del cual te sientas orgulloso."
+        </p>
+    </div>
+</div>
+
+<section class="features-section">
+    <div class="container">
+        <h2 class="section-title">¿Cómo te ayudamos a crecer?</h2>
+        
+        <div class="grid-cards">
+            <div class="card">
+                <div class="card-icon">📣</div>
+                <h3 class="card-title">Promociónate</h3>
+                <p class="card-desc">Hazte visible ante clientes de tu zona que buscan exactamente los servicios que tú ofreces.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">📸</div>
+                <h3 class="card-title">Muestra tu trabajo</h3>
+                <p class="card-desc">Sube fotos de tus proyectos terminados para transmitir confianza y demostrar la calidad de lo que haces.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">📅</div>
+                <h3 class="card-title">Organízate</h3>
+                <p class="card-desc">Gestiona tus contactos, acuerdos y tiempos de entrega directamente en un solo lugar.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">⭐</div>
+                <h3 class="card-title">Perfil Profesional</h3>
+                <p class="card-desc">Consigue reputación con las opiniones de tus clientes y construye una marca propia de la que te sientas orgulloso.</p>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

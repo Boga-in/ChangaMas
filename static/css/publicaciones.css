@@ -1,17 +1,47 @@
 /* ==========================================================
+   COLORES
+   ========================================================== */
+:root {
+        --verde-agua-principal: #0d9488;
+        --verde-agua-suave: #ccfbf1;
+        --celeste-fondo: #f0f9ff;
+        --celeste-acento: #006ba0;
+        --texto-oscuro: #1e293b;
+        --texto-mutado: #64748b;
+    }
+
+/* ==========================================================
+   Keyframes para animaciones
+   ========================================================== */
+@keyframes breathing {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.4);
+    }
+    50% {
+        transform: scale(1.04);
+        box-shadow: 0 0 12px 4px rgba(13, 148, 136, 0.2);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
+    }
+} 
+
+/* ==========================================================
    ESTILOS GENERALES Y LAYOUT
    ========================================================== */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #f8f9fa;
-    color: #333;
+    background-color: var(--celeste-fondo);
+    color: var(--texto-oscuro);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
-
+ 
 main {
     padding: 20px;
     flex: 1;
@@ -232,11 +262,7 @@ body {
     background-color: #ebebeb; /* Gris para el fondo */
 }
 
-@keyframes breathing {
-    0% { transform: scale(0.9); }
-    50% { transform: scale(1); }
-    100% { transform: scale(0.9); }
-}
+
 
 .contenedor-grilla {
     display: grid;
@@ -247,4 +273,161 @@ body {
 .publicacionButton {
   animation: breathing 5s ease-out infinite normal;
 }
+}
+
+/* ==========================================================
+   LANDING PAGE Y SECCIONES DE INFORMACIÓN
+   ========================================================== */
+
+.hero-section {
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 4rem 1.5rem;
+    text-align: center;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.badge-provincia {
+    display: inline-block;
+    background-color: var(--verde-agua-suave);
+    color: var(--verde-agua-principal);
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.35rem 1rem;
+    border-radius: 9999px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #99f6e4;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--texto-oscuro);
+    margin-bottom: 1.25rem;
+}
+
+.hero-title span {
+    color: var(--verde-agua-principal);
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--texto-mutado);
+    max-width: 750px;
+    margin: 0 auto 2rem auto;
+    line-height: 1.6;
+}
+
+.cta-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background-color: var(--verde-agua-principal);
+    color: white;
+    padding: 0.85rem 1.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0f766e;
+}
+
+.btn-secondary {
+    background-color: rgb(165, 191, 247);
+    color: var(--celeste-acento);
+    border: 1px solid #cbd5e1;
+    padding: 0.85rem 1.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #4ea6ff;
+}
+
+.features-section {
+    padding: 4rem 1.5rem;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+}
+
+.grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--verde-agua-suave);
+    color: var(--verde-agua-principal);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.card-desc {
+    color: var(--texto-mutado);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.manifesto-box {
+    background-color: white;
+    border-left: 5px solid var(--verde-agua-principal);
+    padding: 2rem;
+    border-radius: 0 12px 12px 0;
+    margin: 3rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.manifesto-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #334155;
+    line-height: 1.7;
 }

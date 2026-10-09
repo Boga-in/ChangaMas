@@ -13,9 +13,16 @@ from django.contrib.auth.decorators import login_required
 
 class InicioView(ListView):
     model = Publicacion
-    template_name = 'publicaciones/inicio.html'
     context_object_name = 'publicaciones'
     paginate_by = 10
+
+    def get_template_names(self):
+        if self.request.user.is_authenticated:
+            # Plantilla para usuarios logueados (Dashboard / Feed de publicaciones)
+            return ['publicaciones/muro.html']
+        
+        # Plantilla para visitantes (Landing informativa de ChangaMas)
+        return ['publicaciones/inicio.html']
 
     def get_queryset(self):
         # 1. Obtenemos la consulta base (todos los empleados)

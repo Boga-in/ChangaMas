@@ -1,34 +1,161 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}Inicio - ChangaMas{% endblock %}
 
 {% block content %}
-    <div class="contenedor-grilla">
+<div class="container mt-4">
+
+    <!-- BOTÓN PUBLICAR (Solo si está logueado) -->
+    {% if user.is_authenticated %}
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{% url 'publicaciones:crear' %}" class="btn btn-primary btn-lg publicacionButton shadow-sm">
+                + Crear Publicación
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- SECCIÓN 1: CARRUSEL (Usuarios logueados) O BANNER CHUBUT (Usuarios anónimos) -->
+    {% if user.is_authenticated %}
+        <!-- CARRUSEL DE DESTACADOS -->
+        {% if publicaciones %}
+            <div id="carruselDestacados" class="carousel slide mb-5 shadow-sm rounded" data-bs-ride="carousel">
+                <div class="carousel-inner rounded">
+                    {% for pub in publicaciones|slice:":3" %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            {% if pub.foto %}
+                                <img src="{{ pub.foto.url }}" class="d-block w-100" style="height: 320px; object-fit: cover;" alt="{{ pub.titulo }}">
+                            {% else %}
+                                <div class="d-block w-100 bg-secondary bg-gradient d-flex align-items-center justify-content-center text-white" style="height: 320px;">
+                                    <span class="fs-4">ChangaMas - {{ pub.titulo }}</span>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                <h5>
+                                    {% if pub.empleado %}
+                                        Ofrecimiento: {{ pub.empleado.usuario.first_name|default:pub.empleado.usuario.username }}
+                                    {% elif pub.empresa %}
+                                        Búsqueda: {{ pub.empresa.nombre_empresa }}
+                                    {% endif %}
+                                </h5>
+                                <p class="mb-0">{{ pub.descripcion|truncatechars:100 }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carruselDestacados" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carruselDestacados" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
+        {% endif %}
+    {% else %}
+        <!-- HERO INSTITUCIONAL CHANGAMAS (Para visitantes) -->
+        <div class="p-4 p-md-5 mb-5 rounded-4 shadow-sm text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%); border: 1px solid #99f6e4;">
+            <div class="col-md-10 mx-auto">
+                <span class="badge bg-white text-teal px-3 py-2 rounded-pill shadow-sm mb-3 text-dark fw-bold" style="border: 1px solid #0d9488;">
+                    📍 Hecho en Chubut
+                </span>
+                <h1 class="display-6 fw-bold text-dark mb-3">Potenciamos el trabajo local en ChangaMas</h1>
+                <p class="lead text-secondary mb-4">
+                    Conocemos la realidad de nuestra provincia y sabemos que gran parte de nuestra comunidad se gana la vida "changueando". Queremos darte el espacio que necesitas para promocionarte, mostrar tus resultados, organizarte y construir un perfil profesional del que te sientas orgulloso.
+                </p>
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a href="{% url 'usuario_crear' %}" class="btn btn-teal text-white btn-lg px-4 shadow-sm" style="background-color: #0d9488;">Sumarme a ChangaMas</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg px-4">Ya tengo cuenta</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- BUSCADOR -->
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <form method="GET" action="{% url 'publicaciones:inicio' %}">
+                <div class="input-group input-group-lg shadow-sm">
+                    <input type="text" class="form-control" placeholder="Buscar por oficio, título o descripción..." name="q" value="{{ request.GET.q|default:'' }}">
+                    <button class="btn btn-primary" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: GRILLA DE PUBLICACIONES -->
+    <h3 class="mb-4 text-secondary border-bottom pb-2">Publicaciones Recientes</h3>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for pub in publicaciones %}
-            <div style="border: 1px solid blue; padding: 10px;">
-                <div>
-                    <h4>{% if pub.oferta %}
-                            <span class="badge bg-primary">Oferta</span> {{ pub.oferta.titulo }}
-                        {% elif pub.busqueda %}
-                            <span class="badge bg-success">Búsqueda</span> {{ pub.busqueda.titulo }}
-                        {% else %}
-                            <span class="badge bg-secondary">Publicación General</span>         
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm position-relative">
+                    
+                    <!-- ETIQUETA SUPERIOR (Oferta o Búsqueda) -->
+                    <div class="position-absolute top-0 start-0 m-2 style-badge">
+                        {% if pub.empleado %}
+                            <span class="badge bg-info text-dark shadow-sm">Ofrecimiento</span>
+                        {% elif pub.empresa %}
+                            <span class="badge bg-success shadow-sm">Búsqueda Laboral</span>
                         {% endif %}
-                    </h4>
-                    <img src="{{ pub.foto.url }}" width="100" height="100" alt="Imagen del trabajo">
-                    <p>{{ pub.descripcion }}</p>
-                    <small><strong>Creado por:</strong> {% if pub.oferta %}
-                                                            {{ pub.oferta.id_empresa.usuario.username }} (Empresa)
-                                                        {% elif pub.busqueda %}
-                                                            {{ pub.busqueda.id_empleado.usuario.username }} (Empleado)
-                                                        {% else %}
-                                                            {{ pub.usuario.username }}
-                                                        {% endif %}
-                    </small>
+                    </div>
+
+                    <!-- FOTO / PLACEHOLDER -->
+                    {% if pub.foto %}
+                        <img src="{{ pub.foto.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ pub.titulo }}">
+                    {% else %}
+                        <img src="{% static 'img/avatar_generico.jpg' %}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Sin imagen">
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <!-- TÍTULO DE LA PUBLICACIÓN -->
+                        <h5 class="card-title fw-bold text-dark text-truncate mb-1">
+                            {{ pub.titulo }}
+                        </h5>
+
+                        <!-- NOMBRE DEL AUTOR -->
+                        <p class="text-muted small mb-2">
+                            Por: 
+                            {% if pub.empleado %}
+                                <strong>{{ pub.empleado.usuario.first_name|default:pub.empleado.usuario.username }}</strong>
+                            {% elif pub.empresa %}
+                                <strong>{{ pub.empresa.nombre_empresa }}</strong>
+                            {% else %}
+                                Anónimo
+                            {% endif %}
+                        </p>
+                        
+                        <!-- LÓGICA DE VISIBILIDAD DE CONTENIDO -->
+                        {% if user.is_authenticated %}
+                            <p class="card-text text-secondary" style="font-size: 0.95rem;">
+                                {{ pub.descripcion|truncatechars:120 }}
+                            </p>
+                        {% else %}
+                            <p class="card-text text-muted italic" style="font-size: 0.9rem;">
+                                {{ pub.descripcion|truncatechars:50 }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-footer bg-white border-top-0 pb-3 text-center">
+                        {% if user.is_authenticated %}
+                            <a href="#" class="btn btn-outline-primary w-100">Ver información completa</a>
+                        {% else %}
+                            <a href="{% url 'usuario_crear' %}" class="btn btn-sm btn-primary w-100">Regístrate para ver más</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         {% empty %}
-            <p>No hay publicaciones activas.</p>
+            <div class="col-12 text-center py-5">
+                <p class="text-muted fs-5">No se encontraron publicaciones que coincidan con tu búsqueda.</p>
+                {% if request.GET.q %}
+                    <a href="{% url 'publicaciones:inicio' %}" class="btn btn-outline-secondary btn-sm">Limpiar búsqueda</a>
+                {% endif %}
+            </div>
         {% endfor %}
     </div>
+</div>
 {% endblock %}
