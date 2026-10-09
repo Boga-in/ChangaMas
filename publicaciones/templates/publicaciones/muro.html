@@ -141,7 +141,7 @@
 
                     <div class="card-footer bg-white border-top-0 pb-3 text-center">
                         {% if user.is_authenticated %}
-                            <a href="#" class="btn btn-outline-primary w-100">Ver información completa</a>
+                            <a href="{% url 'publicaciones:detalle' pub.id %}" class="btn btn-outline-primary w-100">Ver información completa</a>
                         {% else %}
                             <a href="{% url 'usuario_crear' %}" class="btn btn-sm btn-primary w-100">Regístrate para ver más</a>
                         {% endif %}
