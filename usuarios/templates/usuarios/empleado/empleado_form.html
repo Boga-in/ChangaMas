@@ -1,18 +1,53 @@
 {% extends 'base.html' %}
 
-{% block title %}Empleado crear - ChangaMas{% endblock %}
+{% block title %}{% if object %}Editar Perfil Profesional{% else %}Crear Perfil Profesional{% endif %} - ChangaMas{% endblock %}
 
 {% block content %}
-    <h1>{% if object %}Editar perfil de {{ object.usuario.username }}{% else %}Crear Nuevo Perfil Profesional{% endif %}</h1>
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4 fw-bold text-dark border-bottom pb-3">
+                        {% if object %}
+                            Editar Perfil Profesional
+                        {% else %}
+                            Crear Perfil Profesional
+                        {% endif %}
+                    </h2>
 
-    <!-- El enctype es fundamental aquí por el campo CV -->
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        {{ form.as_p }}
-        
-        <button type="submit">Guardar Perfil Profesional</button>
-        <a href="{% url 'empleado_lista' %}">Cancelar</a>
-    </form>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                        {% endif %}
 
+                        <div class="row g-3">
+                            {% for field in form %}
+                                <div class="col-12 mb-2">
+                                    <label class="form-label fw-bold text-secondary">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-danger small mt-1 fw-bold">{{ field.errors.as_text }}</div>
+                                    {% endif %}
+                                    {% if field.help_text %}
+                                        <div class="form-text text-muted small">{{ field.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-5 pt-3 border-top">
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg px-4">Cancelar</a>
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                {% if object %}Guardar Cambios{% else %}Registrar Perfil{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

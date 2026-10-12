@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 # users/views.py
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Usuario, empleado, empresa
-from .forms import EmpleadoForm, creacioUsuarioForm, modificarUsuarioForm
+from .forms import EmpleadoForm, creacioUsuarioForm, modificarUsuarioForm, EmpresaForm
 
 # READ: Lista de todos los usuarios
 class UsuarioListView(UserPassesTestMixin, ListView):
@@ -63,6 +64,13 @@ class EmpleadoCreateView(LoginRequiredMixin, CreateView):
     form_class = EmpleadoForm
     template_name = 'usuarios/empleado/empleado_form.html'
 
+    #inyecto un dispatch para que no pueda crear un perfil de empleado si ya tiene uno de empleado o empresa
+    def dispatch(self, request, *args, **kwargs):
+        if getattr(request.user, 'es_empleado', False) or getattr(request.user, 'es_empresa', False):
+            messages.warning(request, "Ya tienes un perfil de trabajo registrado. No puedes crear otro.")
+            return redirect('usuario_detalle', pk=request.user.pk)
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         # Asigna el usuario logueado al objeto sin guardarlo aún en la BBDD
         form.instance.usuario = self.request.user
@@ -72,17 +80,24 @@ class EmpleadoCreateView(LoginRequiredMixin, CreateView):
         # Redirige de vuelta al perfil del usuario
         return reverse('usuario_detalle', kwargs={'pk': self.request.user.pk})
 
-class EmpleadoUpdateView(UpdateView, LoginRequiredMixin):
+class EmpleadoUpdateView(LoginRequiredMixin, UpdateView):
     model = empleado
-    # Excluimos 'usuario' para que no se pueda transferir el perfil a otra persona al editar
     fields = ['fecha_ingreso', 'cargo', 'cv', 'experiencia']
     template_name = 'usuarios/empleado/empleado_form.html'
     success_url = reverse_lazy('empleado_lista')
+    
+    # SEGURIDAD: Solo trae el perfil si pertenece al usuario logueado
+    def get_queryset(self):
+        return super().get_queryset().filter(usuario=self.request.user)
 
-class EmpleadoDeleteView(DeleteView, LoginRequiredMixin):
+class EmpleadoDeleteView(LoginRequiredMixin, DeleteView):
     model = empleado
     template_name = 'usuarios/empleado/empleado_confirmar_baja.html'
     success_url = reverse_lazy('empleado_lista')
+    
+    # SEGURIDAD
+    def get_queryset(self):
+        return super().get_queryset().filter(usuario=self.request.user)
 
 
 # ==========================================
@@ -99,27 +114,40 @@ class EmpresaDetailView(DetailView):
     template_name = 'usuarios/empresa/empresa_detalle.html'
     context_object_name = 'empresa'
 
-class EmpresaCreateView(CreateView, LoginRequiredMixin):
+class EmpresaCreateView(LoginRequiredMixin, CreateView):
     model = empresa
-    fields = ['nombre_empresa', 'descripcion', 'direccion', 'telefono', 'website']
+    form_class = EmpresaForm # USAMOS EL NUEVO FORMULARIO
     template_name = 'usuarios/empresa/empresa_form.html'
+
+    #mismo dispatch que en empleado para que no pueda crear un perfil de empresa si ya tiene uno de empleado o empresa
+    def dispatch(self, request, *args, **kwargs):
+        if getattr(request.user, 'es_empleado', False) or getattr(request.user, 'es_empresa', False):
+            messages.warning(request, "Ya tienes un perfil de trabajo registrado. No puedes crear otro.")
+            return redirect('usuario_detalle', pk=request.user.pk)
+        return super().dispatch(request, *args, **kwargs)
+    
     def form_valid(self, form):
-            # Asigna el usuario logueado al objeto sin guardarlo aún en la BBDD
-            form.instance.usuario = self.request.user
-            return super().form_valid(form)
+        form.instance.usuario = self.request.user
+        return super().form_valid(form)
     
     def get_success_url(self):
-        # Redirige de vuelta al perfil del usuario
         return reverse('usuario_detalle', kwargs={'pk': self.request.user.pk})
-    success_url = reverse_lazy('empresa_lista')
 
-class EmpresaUpdateView(UpdateView, LoginRequiredMixin):
+class EmpresaUpdateView(LoginRequiredMixin, UpdateView):
     model = empresa
-    fields = ['nombre_empresa', 'descripcion', 'direccion', 'telefono', 'website']
+    form_class = EmpresaForm # USAMOS EL NUEVO FORMULARIO
     template_name = 'usuarios/empresa/empresa_form.html'
     success_url = reverse_lazy('empresa_lista')
+    
+    # SEGURIDAD
+    def get_queryset(self):
+        return super().get_queryset().filter(usuario=self.request.user)
 
-class EmpresaDeleteView(DeleteView, LoginRequiredMixin):
+class EmpresaDeleteView(LoginRequiredMixin, DeleteView):
     model = empresa
     template_name = 'usuarios/empresa/empresa_confirmar_baja.html'
     success_url = reverse_lazy('empresa_lista')
+    
+    # SEGURIDAD
+    def get_queryset(self):
+        return super().get_queryset().filter(usuario=self.request.user)

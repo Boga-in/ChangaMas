@@ -2,7 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import request
 from django.urls import reverse_lazy
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.contrib import messages
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,TemplateView
 
 from .forms import PublicacionForm
@@ -45,6 +46,13 @@ class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
     success_url = reverse_lazy('publicaciones:mis_publicaciones')
     success_message = '¡La publicación se creó correctamente!'
 
+    # Agregado para redirigir a los usuarios que no tienen perfil de Empleado o Empresa deje una publicación de prueba en mi base para ver lo del 404
+    def dispatch(self, request, *args, **kwargs):
+        if not getattr(request.user, 'es_empleado', False) and not getattr(request.user, 'es_empresa', False):
+            messages.warning(request, "Debes crear un perfil de Empleado o Empresa antes de publicar.")
+            return redirect('publicaciones:crear_perfil_trabajo')
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         if self.request.user.es_empleado:
             form.instance.empleado = self.request.user.empleado
@@ -82,16 +90,28 @@ class MisPublicacionesListView(LoginRequiredMixin, ListView):
         return Publicacion.objects.none()
         
 #Vista basada en clase para Editar una publicacion (Update)
-class PublicacionUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+# IMPORTANTE: Ya no hereda de UserPassesTestMixin
+class PublicacionUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Publicacion
     form_class = PublicacionForm
     template_name = 'publicaciones/editar_publicacion.html'
     success_url = reverse_lazy('publicaciones:inicio')
     success_message = '¡La publicación se actualizó correctamente!'
 
-    def test_func(self):
-        publicacion = self.get_object()
-        return self.request.user == publicacion.self
+    # EL MISMO GUARDIA PARA LA EDICIÓN
+    def dispatch(self, request, *args, **kwargs):
+        if not getattr(request.user, 'es_empleado', False) and not getattr(request.user, 'es_empresa', False):
+            messages.error(request, "No tienes un perfil de trabajo válido para editar.")
+            return redirect('publicaciones:crear_perfil_trabajo')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if getattr(self.request.user, 'es_empleado', False):
+            return queryset.filter(empleado=self.request.user.empleado)
+        elif getattr(self.request.user, 'es_empresa', False):
+            return queryset.filter(empresa=self.request.user.empresa)
+        return queryset.none()
 
 
 #Vista basada en clase para Eliminar una publicacion (Update)

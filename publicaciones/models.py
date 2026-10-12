@@ -29,9 +29,10 @@ class Publicacion(models.Model):
             related_name='requerimientos'
         )
     def __str__(self):
-        # Si tiene oferta, muestra el título de la oferta, si no, el de la búsqueda
+    # Si tiene oferta, muestra el título de la oferta, si no, el de la búsqueda
         if self.empresa:
             return f"Oferta: {self.empresa.nombre_empresa}"
         elif self.empleado:
-            return f"Búsqueda: {self.empleado.usuario.nombre}"
-        return {self.id}
+            return f"Búsqueda: {self.empleado.usuario.username}"
+
+        return f"Publicación {self.id}"
