@@ -431,3 +431,43 @@ body {
     color: #334155;
     line-height: 1.7;
 }
+
+/* ==========================================================
+   PILDORAS DE HABILIDADES
+   ========================================================== */
+
+
+/* Oculta el checkbox nativo */
+.globo-habilidad input[type="checkbox"] {
+    display: none;
+}
+
+/* Estilo base del globo (desmarcado) */
+.badge-globo {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #475569;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 9999px; /* Forma de píldora/globo */
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease-in-out;
+}
+
+/* EFECTO HOVER: Al pasar el cursor */
+.badge-globo:hover {
+    background-color: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+/* ESTADO SELECCIONADO: Cuando el checkbox interno está marcado (:checked) */
+.globo-habilidad input[type="checkbox"]:checked + .badge-globo {
+    background-color: #0d9488; /* Verde agua de ChangaMas */
+    color: #ffffff;
+    border-color: #0f766e;
+    box-shadow: 0 2px 5px rgba(13, 148, 136, 0.3);
+    transform: translateY(-1px);
+}

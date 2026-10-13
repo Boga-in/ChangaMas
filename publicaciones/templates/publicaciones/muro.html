@@ -54,23 +54,6 @@
                 </button>
             </div>
         {% endif %}
-    {% else %}
-        <!-- HERO INSTITUCIONAL CHANGAMAS (Para visitantes) -->
-        <div class="p-4 p-md-5 mb-5 rounded-4 shadow-sm text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%); border: 1px solid #99f6e4;">
-            <div class="col-md-10 mx-auto">
-                <span class="badge bg-white text-teal px-3 py-2 rounded-pill shadow-sm mb-3 text-dark fw-bold" style="border: 1px solid #0d9488;">
-                    📍 Hecho en Chubut
-                </span>
-                <h1 class="display-6 fw-bold text-dark mb-3">Potenciamos el trabajo local en ChangaMas</h1>
-                <p class="lead text-secondary mb-4">
-                    Conocemos la realidad de nuestra provincia y sabemos que gran parte de nuestra comunidad se gana la vida "changueando". Queremos darte el espacio que necesitas para promocionarte, mostrar tus resultados, organizarte y construir un perfil profesional del que te sientas orgulloso.
-                </p>
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <a href="{% url 'usuario_crear' %}" class="btn btn-teal text-white btn-lg px-4 shadow-sm" style="background-color: #0d9488;">Sumarme a ChangaMas</a>
-                    <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg px-4">Ya tengo cuenta</a>
-                </div>
-            </div>
-        </div>
     {% endif %}
 
     <!-- BUSCADOR -->
@@ -86,7 +69,7 @@
     </div>
 
     <!-- SECCIÓN 2: GRILLA DE PUBLICACIONES -->
-    <h3 class="mb-4 text-secondary border-bottom pb-2">Publicaciones Recientes</h3>
+    <h3 class="mb-4 text-secondary border-bottom pb-2">ChangaMas Recientes</h3>
     
     <div class="row row-cols-1 row-cols-md-3 g-4">
         {% for pub in publicaciones %}
