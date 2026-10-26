@@ -31,24 +31,59 @@
                         <!-- Recorremos los campos dándoles espaciado -->
                         <div class="row g-3">
                             {% for field in form %}
-                                <div class="col-12 mb-2">
-                                    <label class="form-label fw-bold text-secondary">{{ field.label }}</label>
-                                    {{ field }}
-                                    
-                                    <!-- Mostramos los errores de validación en rojo debajo del campo -->
-                                    {% if field.errors %}
-                                        <div class="text-danger small mt-1 fw-bold">
-                                            {{ field.errors.as_text }}
-                                        </div>
-                                    {% endif %}
-                                    
-                                    {% if field.help_text %}
-                                        <div class="form-text text-muted small">{{ field.help_text }}</div>
-                                    {% endif %}
-                                </div>
+                                <!-- Excluimos 'habilidades' del bucle genérico para diseñarlas a mano -->
+                                {% if field.name != 'habilidades' %}
+                                    <div class="col-12 mb-2">
+                                        <label class="form-label fw-bold text-secondary" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        {{ field }}
+                                        
+                                        <!-- Errores de validación -->
+                                        {% if field.errors %}
+                                            <div class="text-danger small mt-1 fw-bold">
+                                                {{ field.errors.as_text }}
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <!-- Texto de ayuda -->
+                                        {% if field.help_text %}
+                                            <div class="form-text text-muted small">{{ field.help_text }}</div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             {% endfor %}
                         </div>
 
+                        <!-- BLOQUE PERSONALIZADO PARA HABILIDADES EN FORMATO DE PÍLDORAS -->
+                        <div class="mb-4 mt-3">
+                            <label class="form-label fw-bold text-secondary d-block">Habilidades requeridas / asociadas</label>
+                            
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                {% for widget in form.habilidades %}
+                                    <div>
+                                        <input type="checkbox" 
+                                            name="{{ widget.data.name }}" 
+                                            value="{{ widget.data.value }}" 
+                                            id="{{ widget.id_for_label }}" 
+                                            class="btn-check" 
+                                            {% if widget.data.selected %}checked{% endif %}>
+                                        
+                                        <label class="btn btn-outline-success rounded-pill px-3 py-1 text-capitalize" 
+                                            for="{{ widget.id_for_label }}">
+                                            {{ widget.choice_label }}
+                                        </label>
+                                    </div>
+                                {% empty %}
+                                    <p class="text-muted small">No hay habilidades disponibles para seleccionar.</p>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Errores específicos del campo de habilidades -->
+                            {% if form.habilidades.errors %}
+                                <div class="text-danger small mt-1 fw-bold">
+                                    {{ form.habilidades.errors.as_text }}
+                                </div>
+                            {% endif %}
+                        </div>
                         <div class="d-flex justify-content-between mt-5 pt-3 border-top">
                             <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg px-4">Cancelar</a>
                             <button type="submit" class="btn btn-primary btn-lg px-5">

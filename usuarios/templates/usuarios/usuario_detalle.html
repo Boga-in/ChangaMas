@@ -29,7 +29,7 @@
             {% if usuario.es_empleado %}
                 <ul class="list-group list-group-flush shadow-sm">
                     <li class="list-group-item bg-success text-white fw-bold">👷 Perfil de Trabajador Activo</li>
-                    <li class="list-group-item"><strong>Oficio / Cargo:</strong> {{ usuario.empleado.cargo }}</li>
+                    <li class="list-group-item"><strong>Changa / Cargo:</strong> {{ usuario.empleado.cargo }}</li>
                     <li class="list-group-item"><strong>Miembro desde:</strong> {{ usuario.empleado.fecha_ingreso|date:"d/m/Y" }}</li>
                 </ul>
             {% elif usuario.es_empresa %}
@@ -57,14 +57,14 @@
                     {% if usuario.es_empleado %}
                         
                         <a href="{% url 'empleado_detalle' usuario.empleado.pk %}" class="btn btn-success">👀 Ver mi CV</a>
-                        <a href="{% url 'empleado_editar' usuario.empleado.pk %}" class="btn btn-outline-success">✏️ Editar CV/Oficio</a>
-                        <a href="{% url 'publicaciones:crear' %}" class="btn btn-warning mt-2 fw-bold">➕ Publicar un servicio</a>
+                        <a href="{% url 'empleado_editar' usuario.empleado.pk %}" class="btn btn-outline-success">✏️ Editar CV/Changa</a>
+                        <a href="{% url 'publicaciones:crear' %}" class="btn btn-warning mt-2 fw-bold">Publicar Changa➕</a>
                         
                     {% elif usuario.es_empresa %}
                         
                         <a href="{% url 'empresa_detalle' usuario.empresa.pk %}" class="btn btn-primary">👀 Ver perfil Empresa</a>
                         <a href="{% url 'empresa_editar' usuario.empresa.pk %}" class="btn btn-outline-primary">✏️ Editar Empresa</a>
-                        <a href="{% url 'publicaciones:crear' %}" class="btn btn-warning mt-2 fw-bold">➕ Publicar búsqueda laboral</a>
+                        <a href="{% url 'publicaciones:crear' %}" class="btn btn-warning mt-2 fw-bold">Publicar Changa➕</a>
                         
                     {% else %}
                         
