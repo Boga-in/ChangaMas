@@ -2,15 +2,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import request
 from django.urls import reverse_lazy
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404, render,redirect
 from django.contrib import messages
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,TemplateView
 
 from .forms import PublicacionForm
-from .models import Publicacion
+from .models import Publicacion, ReportePublicacion
 from django.contrib.auth.decorators import login_required
 
-#Vista basada en clase para crear una publicacion (Create)
+#Funcion para verificar si el usuario es visor o admin
+def es_visor_o_admin(user):
+    return user.is_superuser or user.groups.filter(name='visores').exists() or user.is_staff
 
 class InicioView(ListView):
     model = Publicacion
@@ -27,8 +29,8 @@ class InicioView(ListView):
 
     def get_queryset(self):
         # 1. Obtenemos la consulta base (todos los empleados)
-        queryset = super().get_queryset()
-        
+        queryset = super().get_queryset().exclude(reportes__estado='pendiente').distinct()
+
         # 2. Capturamos lo que el usuario escribió en el input name="q"
         termino_busqueda = self.request.GET.get('q')
         
@@ -67,11 +69,30 @@ class PublicacionDetailView(LoginRequiredMixin,DetailView):
     context_object_name = 'publicacion'
 
 #Vista basada en clase para Listar las publicaciones
-class PublicacionListView(ListView):
+class PublicacionListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Publicacion
     template_name = 'publicaciones/listar_publicaciones.html'
-    context_object_name = 'publicaciones'
     paginate_by = 10
+    # Función de validación para el UserPassesTestMixin
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser or user.groups.filter(name='visores').exists() or user.is_staff
+
+    # Sobrescribimos este método para enviar múltiples querysets a la plantilla
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # 1. Publicaciones con reportes pendientes (con optimización prefetch_related)
+        context['pubs_reportadas'] = Publicacion.objects.filter(
+            reportes__estado='pendiente'
+        ).prefetch_related('reportes__usuario').distinct()
+
+        # 2. Publicaciones normales (que no tienen reportes pendientes)
+        context['pubs_normales'] = Publicacion.objects.exclude(
+            reportes__estado='pendiente'
+        ).distinct()
+        
+        return context
 
 class MisPublicacionesListView(LoginRequiredMixin, ListView):
     model = Publicacion
@@ -134,3 +155,34 @@ class PublicacionDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView)
 
 def CrearPerfilTrabajoView(request):
     return render(request, 'publicaciones/crear_perfil_trabajo.html')
+
+class ReporteCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = ReportePublicacion
+    fields = ['motivo']
+    template_name = 'publicaciones/reporte_form.html'
+    success_url = reverse_lazy('publicaciones:lista') # URL a donde redirige tras reportar con éxito
+
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser or user.groups.filter(name='visores').exists() or user.is_staff
+
+    def form_valid(self, form):
+        # 1. Capturamos la publicación mediante el PK que viene en la URL
+        publicacion_pk = self.kwargs.get('pk')
+        form.instance.publicacion = get_object_or_404(Publicacion, pk=publicacion_pk)
+        
+        # 2. Asignamos automáticamente al usuario logueado como autor del reporte
+        form.instance.usuario = self.request.user
+        
+        return super().form_valid(form)
+
+
+class ReporteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = ReportePublicacion
+    fields = ['estado'] # Permitimos cambiar el estado (ej. de 'pendiente' a 'resuelto')
+    template_name = 'publicaciones/reporte_update.html'
+    success_url = reverse_lazy('publicaciones:lista') # O la ruta de tu panel de moderación
+
+    def test_func(self):
+        user = self.request.user
+        return user.is_superuser or user.groups.filter(name='visores').exists() or user.is_staff

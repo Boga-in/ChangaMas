@@ -1,5 +1,5 @@
 from django.db import models
-from usuarios.models import empleado, empresa
+from usuarios.models import Usuario, empleado, empresa
 from django.conf import settings  # <-- Usamos settings
 
 class Habilidad(models.Model):
@@ -28,6 +28,12 @@ class Publicacion(models.Model):
             blank=True, 
             related_name='requerimientos'
         )
+
+    class Meta:
+        permissions = [
+            ("puede_reportar", "Puede reportar publicaciones"), #Se define el permiso
+        ]
+
     def __str__(self):
     # Si tiene oferta, muestra el título de la oferta, si no, el de la búsqueda
         if self.empresa:
@@ -36,3 +42,18 @@ class Publicacion(models.Model):
             return f"Búsqueda: {self.empleado.usuario.username}"
 
         return f"Publicación {self.id}"
+
+class ReportePublicacion(models.Model):
+    ESTADOS = [
+        ('pendiente', 'Pendiente'),
+        ('resuelto', 'Resuelto'),
+    ]
+
+    publicacion = models.ForeignKey('Publicacion', on_delete=models.CASCADE, related_name='reportes')
+    usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True) # Quién la reportó
+    motivo = models.TextField()
+    estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Reporte en '{self.publicacion.titulo}' - {self.estado}"

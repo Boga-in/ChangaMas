@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resolver Reporte - ChangaMas{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4 text-primary">🛠️ Actualizar Estado del Reporte</h2>
+                        <p class="text-muted">Modifica el estado del reporte (por ejemplo, pásalo a "resuelto" una vez evaluado).</p>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <!-- Django renderiza el campo 'estado' (Select con opciones pendiente/resuelto) -->
+                            <div class="mb-3">
+                                {{ form.as_p }}
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'inicio' %}" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

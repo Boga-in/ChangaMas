@@ -8,8 +8,9 @@
     <a href="{% url 'publicaciones:crear' %}">Crear nueva publicación</a>
     <br><br>
 
-    {% if publicaciones %}
-        {% for publicacion in publicaciones %}
+    {% if pubs_normales %}
+        <h2>Publicaciones</h2>
+        {% for publicacion in pubs_normales %}
             <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
                 <h2>{{ publicacion.titulo }}</h2>
                 <p><strong>Autor:</strong> 
@@ -32,11 +33,58 @@
                 
                 
                 | <a href="{% url 'publicaciones:editar' publicacion.pk %}">Editar</a>
+                |  <a href="{% url 'publicaciones:reportar_publicacion' publicacion.pk %}">Reportar</a>
                 | <a href="{% url 'publicaciones:eliminar' publicacion.pk %}">Eliminar</a>
                 
             </div>
         {% endfor %}
+    {% else %}
+        <p>No hay publicaciones disponibles.</p>
+    {% endif %}
+    <hr><hr>
+    {% if pubs_reportadas %}
+        <h2>Publicaciones con Reportes Pendientes</h2>
+        {% for publicacion in pubs_reportadas %}
+            <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+                <h2>{{ publicacion.titulo }}</h2>
+                <p><strong>Autor:</strong> 
+                    {% if publicacion.empresa %}
+                        {{ publicacion.empresa.nombre_empresa }}
+                    {% elif publicacion.empleado %}
+                        {{ publicacion.empleado.usuario.username }}
+                    {% else %}
+                        Anónimo
+                    {% endif %}
+                </p>
+            
+                {% if publicacion.foto %}
+                    <img src="{{ publicacion.foto.url }}" alt="{{ publicacion.titulo }}" style="max-width: 300px; height: auto;">
+                {% endif %}
 
+                <p>{{ publicacion.descripcion|truncatewords:20 }}</p>
+                
+                
+                {% for reporte in publicacion.reportes.all %}
+                    <p>Reportes en esta publicación:</p>
+                        {% if reporte.estado == 'pendiente' %}
+                            <div class="border p-2">
+                                <p><strong>Reporte #{{ reporte.id }}:</strong> <br><strong>Estado:</strong> {{ reporte.estado }}<br><strong>Reportado por:</strong> {{ reporte.usuario.username }}</p>
+                                <p><strong>Motivo:</strong> {{ reporte.motivo }}</p>
+                                <!-- AQUÍ USAMOS EL ID DEL REPORTE CORRECTAMENTE -->
+                                <a href="{% url 'publicaciones:resolver_reporte' reporte.id %}" class="btn btn-warning btn-sm">
+                                    Resolver Reporte #{{ reporte.id }}
+                                </a>
+                            </div>
+                        {% endif %}
+                {% endfor %}
+                
+                <a href="{% url 'publicaciones:detalle' publicacion.pk %}">Ver Detalle</a>
+                | <a href="{% url 'publicaciones:editar' publicacion.pk %}">Editar</a>
+                | <a href="{% url 'publicaciones:eliminar' publicacion.pk %}">Eliminar</a>
+                
+            </div>
+        {% endfor %}
+    
         <!-- Controles de Paginación generados automáticamente por ListView -->
         {% if is_paginated %}
             <div style="margin-top: 20px;">
@@ -54,6 +102,6 @@
             </div>
         {% endif %}
     {% else %}
-        <p>No hay publicaciones disponibles.</p>
+        <p>No hay publicaciones reportadas.</p>
     {% endif %}
 {% endblock %}
