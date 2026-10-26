@@ -11,7 +11,7 @@
     <p>{{ publicacion.descripcion }}</p>
 
     <div style="margin-top: 20px;">
-        {% if user == publicacion.empleado.usuario or user == publicacion.empresa.usuario or user.es_admin_general %}
+        {% if user == publicacion.empleado.usuario or user == publicacion.empresa.usuario or user.es_admin_general or perms.publicaciones.puede_reportar %}
             <a href="{% url 'publicaciones:editar' publicacion.pk %}">Editar</a> |
             <a href="{% url 'publicaciones:eliminar' publicacion.pk %}">Eliminar</a> |
         {% endif %}

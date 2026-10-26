@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reportar Publicación - ChangaMas{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4 text-danger">⚠️ Reportar Publicación</h2>
+                        <p class="text-muted">Por favor, indícanos el motivo por el cual consideras que esta publicación debe ser revisada por la moderación.</p>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <!-- Django renderiza el campo 'motivo' automáticamente -->
+                            <div class="mb-3">
+                                {{ form.as_p }}
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'publicaciones:inicio' %}" class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-danger">Enviar Reporte</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
