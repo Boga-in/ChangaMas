@@ -2,14 +2,15 @@
     <div class="brand-logo">
         <a href="{% url 'publicaciones:inicio' %}">ChangaMas</a>
     </div>
-
         <!-- NAVEGACIÓN CENTRAL -->
         <nav>
             {% if user.is_authenticated %}
                 <a href="{% url 'usuario_detalle' user.pk %}" style="color: white; text-decoration: none; margin-right: 20px;">Perfil</a> 
             {% endif %}
-            {% if user.is_authenticated and user.is_staff or perms.publicaciones.puede_reportar %}
+            {% if user.is_authenticated and user.is_staff %}
                 <a href="{% url 'usuario_lista' %}" style="color: white; text-decoration: none; margin-right: 20px;">Usuarios</a>
+            {% endif %}
+            {% if user.is_authenticated and user.is_staff or perms.publicaciones.puede_reportar %}
                 <a href="{% url 'publicaciones:lista' %}" style="color: white; text-decoration: none; margin-right: 20px;">Publicaciones</a>
             {% endif %}
         </nav>
@@ -26,9 +27,9 @@
                 </form>
             {% else %}
                 <!-- Botones para visitantes -->
-        <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Iniciar Sesión</a>
-        <a href="{% url 'usuario_crear' %}" class="btn btn-warning">Regístrate</a>
-    {% endif %}
-</div>
+                <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Iniciar Sesión</a>
+                <a href="{% url 'usuario_crear' %}" class="btn btn-warning">Regístrate</a>
+            {% endif %}
+        </div>
         
-    </header>
+</header>

@@ -21,6 +21,10 @@
         </ul>
     </div>
     <br>
-    <a href="{% url 'empresa_lista' %}">⬅️ Volver a la lista de empresas</a>
+    {% if user.is_authenticated and user.is_staff and user.is_superuser %}
+        <a href="{% url 'empresa_lista' %}">⬅️ Volver a la lista de empresas</a>
+    {% else %}
+        <a href="{% url 'usuario_detalle' pk=empresa.usuario.pk %}">⬅️ Volver a mi perfil</a>
+    {% endif %}
 
 {% endblock %}
