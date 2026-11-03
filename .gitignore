@@ -14,3 +14,6 @@ __pycache__/
 
 # Archivos de VS Code
 .vscode/
+
+# Variables de entorno
+.env
