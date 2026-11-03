@@ -22,7 +22,7 @@
         
                 <!-- EL NUEVO BOTÓN SEGURO DE LOGOUT -->
                 <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                    {% csrf_token %}
+                    {% csrf_token %} 
                     <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar Sesión</button>
                 </form>
             {% else %}

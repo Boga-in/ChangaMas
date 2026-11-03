@@ -19,7 +19,7 @@ class Usuario(AbstractUser):
         return hasattr(self, 'empresa')
 
 class empleado(models.Model):
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE) 
     fecha_ingreso = models.DateField()
     cargo = models.CharField(max_length=100)
     cv = models.FileField(upload_to='cv/', null=True, blank=True)

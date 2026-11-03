@@ -66,7 +66,7 @@ class UsuarioDetailView(SoloPropietarioMixin, DetailView):
     context_object_name = 'usuario'
 
 # CREATE: Crear un usuario nuevo
-class UsuarioCreateView(SoloPropietarioMixin, CreateView):
+class UsuarioCreateView(CreateView):
     model = Usuario
     form_class = creacioUsuarioForm
     template_name = 'usuarios/usuario_form.html'

@@ -41,7 +41,7 @@ class InicioView(ListView):
             
         return queryset
 
-class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView): #
     model = Publicacion
     form_class = PublicacionForm
     template_name = 'publicaciones/crear_publicacion.html'
@@ -50,9 +50,16 @@ class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView)
 
     # Agregado para redirigir a los usuarios que no tienen perfil de Empleado o Empresa deje una publicación de prueba en mi base para ver lo del 404
     def dispatch(self, request, *args, **kwargs):
+        # Si no está logueado, lo frena acá mismo y lo manda al login.
+        if not request.user.is_authenticated:
+             return super().dispatch(request, *args, **kwargs)
+             
+        # Si está logueado, se evalua si tiene un perfil de trabajo
         if not getattr(request.user, 'es_empleado', False) and not getattr(request.user, 'es_empresa', False):
             messages.warning(request, "Debes crear un perfil de Empleado o Empresa antes de publicar.")
             return redirect('publicaciones:crear_perfil_trabajo')
+            
+        # Si pasó ambos controles, que siga su curso normal
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -181,8 +188,8 @@ class ReporteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ReportePublicacion
     fields = ['estado'] # Permitimos cambiar el estado (ej. de 'pendiente' a 'resuelto')
     template_name = 'publicaciones/reporte_update.html'
-    success_url = reverse_lazy('publicaciones:lista') # O la ruta de tu panel de moderación
+    success_url = reverse_lazy('publicaciones:lista') # O la ruta del panel de moderación
 
-    def test_func(self):
+    def test_func(self): 
         user = self.request.user
         return user.is_superuser or user.groups.filter(name='visores').exists() or user.is_staff
