@@ -1,5 +1,7 @@
 from django import forms
-from .models import Publicacion, Habilidad
+
+from .models import Habilidad, Publicacion
+
 
 class PublicacionForm(forms.ModelForm):
     # Campo opcional para escribir habilidades nuevas que no estén en las píldoras
@@ -14,8 +16,8 @@ class PublicacionForm(forms.ModelForm):
     class Meta:
         model = Publicacion
         # Incluimos 'habilidades'
-        fields = ["titulo", "descripcion", "precio", "estado", "duracion", "urgencia", "lugar", "habilidades", "foto"]
-        widgets = {
+        fields = ("titulo", "descripcion", "precio", "estado", "duracion", "urgencia", "lugar", "habilidades", "foto")
+        widgets = {  # noqa: RUF012
             'habilidades': forms.CheckboxSelectMultiple(),
         }
 

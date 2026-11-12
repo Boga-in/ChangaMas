@@ -1,12 +1,20 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
+
 # users/views.py
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
+
+from .forms import EmpleadoForm, EmpresaForm, creacioUsuarioForm, modificarUsuarioForm
 from .models import Usuario, empleado, empresa
-from .forms import EmpleadoForm, creacioUsuarioForm, modificarUsuarioForm, EmpresaForm
+
 
 #MIXINS
 class SoloPropietarioMixin(UserPassesTestMixin):
@@ -27,19 +35,16 @@ class SoloPropietarioMixin(UserPassesTestMixin):
         # 2. Obtenemos el objeto actual que la CBV va a editar/eliminar
         obj = self.get_object()
         
-        # 3. Buscamos al dueño evaluando diferentes estructuras comunes en Django:
-        owner = getattr(obj, self.user_field_name, None)
-        
-        # Caso A: El obj extiende a User nativo de Django)
+        # Caso A: El obj es el propio usuario nativo de Django
         if obj == user:
             return True
 
-        # Caso B: Si tu modelo tiene una relación directa con empleado u otro campo personalizado
+        # Caso B: Si tu modelo es el perfil de empleado
         if obj.__class__.__name__ == 'empleado' and obj.usuario == user:
             return True
-        if obj.__class__.__name__ == 'empresa' and obj.usuario == user:
-            return True
-        return False
+            
+        # Caso C: Si tu modelo es el perfil de empresa
+        return obj.__class__.__name__ == 'empresa' and obj.usuario == user
 
     def handle_no_permission(self):
         # Opcional: Redirigir con un mensaje de error o lanzar un 403 limpio
@@ -125,7 +130,7 @@ class EmpleadoCreateView(LoginRequiredMixin, CreateView):
 
 class EmpleadoUpdateView(LoginRequiredMixin, SoloPropietarioMixin, UpdateView):
     model = empleado
-    fields = ['fecha_ingreso', 'cargo', 'cv', 'experiencia']
+    fields = ('fecha_ingreso', 'cargo', 'cv', 'experiencia')
     template_name = 'usuarios/empleado/empleado_form.html'
     def get_success_url(self):
                 # Redirige al detalle del empleado pasando el ID del usuario actualizado

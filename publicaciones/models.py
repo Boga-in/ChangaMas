@@ -1,6 +1,7 @@
 from django.db import models
+
 from usuarios.models import Usuario, empleado, empresa
-from django.conf import settings  # <-- Usamos settings
+
 
 class Habilidad(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -30,9 +31,9 @@ class Publicacion(models.Model):
         )
 
     class Meta:
-        permissions = [
-            ("puede_reportar", "Puede reportar publicaciones"), #Se define el permiso
-        ]
+        permissions = (
+            ("puede_reportar", "Puede reportar publicaciones"),
+        )
 
     def __str__(self):
     # Si tiene oferta, muestra el título de la oferta, si no, el de la búsqueda
@@ -44,10 +45,10 @@ class Publicacion(models.Model):
         return f"Publicación {self.id}"
 
 class ReportePublicacion(models.Model):
-    ESTADOS = [
+    ESTADOS = (
         ('pendiente', 'Pendiente'),
         ('resuelto', 'Resuelto'),
-    ]
+    )
 
     publicacion = models.ForeignKey('Publicacion', on_delete=models.CASCADE, related_name='reportes')
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True) # Quién la reportó

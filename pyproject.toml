@@ -1,0 +1,6 @@
+[tool.ruff]
+# Agregamos las carpetas de migraciones y tu entorno a la lista de ignorados
+extend-exclude = [
+    "migrations",
+    "entorno"
+]

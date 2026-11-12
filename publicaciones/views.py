@@ -1,14 +1,19 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import request
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404, render,redirect
-from django.contrib import messages
-from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView,TemplateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 
 from .forms import PublicacionForm
 from .models import Publicacion, ReportePublicacion
-from django.contrib.auth.decorators import login_required
+
 
 #Funcion para verificar si el usuario es visor o admin
 def es_visor_o_admin(user):
@@ -41,7 +46,7 @@ class InicioView(ListView):
             
         return queryset
 
-class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView): #
+class PublicacionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Publicacion
     form_class = PublicacionForm
     template_name = 'publicaciones/crear_publicacion.html'
@@ -165,7 +170,7 @@ def CrearPerfilTrabajoView(request):
 
 class ReporteCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = ReportePublicacion
-    fields = ['motivo']
+    fields = ('motivo')
     template_name = 'publicaciones/reporte_form.html'
     success_url = reverse_lazy('publicaciones:lista') # URL a donde redirige tras reportar con éxito
 
@@ -186,7 +191,7 @@ class ReporteCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 class ReporteUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ReportePublicacion
-    fields = ['estado'] # Permitimos cambiar el estado (ej. de 'pendiente' a 'resuelto')
+    fields = ('estado') # Permitimos cambiar el estado (ej. de 'pendiente' a 'resuelto')
     template_name = 'publicaciones/reporte_update.html'
     success_url = reverse_lazy('publicaciones:lista') # O la ruta del panel de moderación
 

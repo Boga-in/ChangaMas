@@ -1,11 +1,24 @@
 # users/urls.py
-from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import path
+
 from .forms import CustomLoginForm
 from .views import (
-    EmpleadoCreateView, EmpleadoDeleteView, EmpleadoDetailView, EmpleadoListView, EmpleadoUpdateView,
-    EmpresaCreateView, EmpresaDeleteView, EmpresaDetailView, EmpresaListView, EmpresaUpdateView,
-    UsuarioCreateView, UsuarioDeleteView, UsuarioDetailView, UsuarioListView, UsuarioUpdateView
+    EmpleadoCreateView,
+    EmpleadoDeleteView,
+    EmpleadoDetailView,
+    EmpleadoListView,
+    EmpleadoUpdateView,
+    EmpresaCreateView,
+    EmpresaDeleteView,
+    EmpresaDetailView,
+    EmpresaListView,
+    EmpresaUpdateView,
+    UsuarioCreateView,
+    UsuarioDeleteView,
+    UsuarioDetailView,
+    UsuarioListView,
+    UsuarioUpdateView,
 )
 
 urlpatterns = [

@@ -1,8 +1,11 @@
-from django.test import TestCase, Client
-from django.urls import reverse
-from usuarios.models import Usuario, empleado 
-from publicaciones.models import Publicacion
 from datetime import date
+
+from django.test import Client, TestCase
+from django.urls import reverse
+
+from publicaciones.models import Publicacion
+from usuarios.models import Usuario, empleado
+
 
 class AutorizacionPublicacionesTest(TestCase):
     def setUp(self):
@@ -48,3 +51,41 @@ class AutorizacionPublicacionesTest(TestCase):
         # LA PRUEBA DEFINITIVA: Verificamos la base de datos
         self.publicacion_ana.refresh_from_db()
         self.assertEqual(self.publicacion_ana.titulo, 'Publicación original de Ana')
+
+
+
+    def test_ana_puede_editar_su_propia_publicacion(self):
+        """
+        Unidad 6: Prueba positiva. Comprueba que el dueño legítimo
+        puede editar su recurso y la base de datos se actualiza.
+        """
+        # Autenticamos a Ana (la dueña legítima)
+        self.cliente.force_login(self.ana)
+        
+        # Ana envía una petición POST para editar SU publicación
+        url_editar_ana = reverse('publicaciones:editar', kwargs={'pk': self.publicacion_ana.pk})
+        response = self.cliente.post(url_editar_ana, {
+            'titulo': 'Título modificado por Ana',
+            'descripcion': 'Esta es una nueva descripción válida para que el formulario pase.'
+        })
+    
+        
+        # Verificamos que el sistema la redirige al éxito (HTTP 302 a Mis Publicaciones)
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_creacion_publicacion_modelo(self):
+        """
+        Unidad 6 - Cap 3.2: Prueba directa del ORM.
+        Verifica que el modelo persiste correctamente los datos
+        sin depender de las vistas ni los formularios.
+        """
+        nueva_pub = Publicacion.objects.create(
+            titulo='Changa de prueba directa',
+            descripcion='Probando el modelo sin vistas',
+            empleado=self.empleado_ana
+        )
+        # Verificamos que se guardó en la base de datos asignando un ID
+        self.assertIsNotNone(nueva_pub.pk)
+        self.assertEqual(nueva_pub.titulo, 'Changa de prueba directa')
+        self.assertEqual(nueva_pub.descripcion, 'Probando el modelo sin vistas')

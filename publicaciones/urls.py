@@ -1,15 +1,16 @@
 from django.urls import path
+
 from .views import (
-    InicioView,
-    PublicacionCreateView,
-    PublicacionListView,
-    PublicacionDetailView,
-    PublicacionUpdateView,
-    PublicacionDeleteView,
-    MisPublicacionesListView,
     CrearPerfilTrabajoView,
+    InicioView,
+    MisPublicacionesListView,
+    PublicacionCreateView,
+    PublicacionDeleteView,
+    PublicacionDetailView,
+    PublicacionListView,
+    PublicacionUpdateView,
     ReporteCreateView,
-    ReporteUpdateView
+    ReporteUpdateView,
 )
 
 app_name = 'publicaciones'
