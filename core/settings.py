@@ -32,7 +32,7 @@ if not SECRET_KEY:
     raise ImproperlyConfigured("Falta DJANGO_SECRET_KEY")
 
 # Hacemos lo mismo con DEBUG: asume False (seguro) a menos que le digamos explícitamente True
-DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() == "true"
+DEBUG = os.environ.get("DJANGO_DEBUG", "False")
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -124,6 +124,8 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
