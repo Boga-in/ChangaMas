@@ -2,9 +2,6 @@
 PROYECTO CHANGAMAS - GUÍA PARA LEVANTAR EL ENTORNO LOCAL DESDE CERO
 ========================================================================
 
-Buenas! Acá dejo el paso a paso para clonar, configurar y levantar el
-proyecto en una máquina local sin renegar con dependencias ni rutas.
-
 ------------------------------------------------------------------------
 REQUISITOS PREVIOS
 ------------------------------------------------------------------------
@@ -56,7 +53,7 @@ Con el entorno activado, actualizamos pip por las dudas e instalamos
 todo lo que figura en el requirements.txt (Django, Pillow, toolbar, etc.):
 
 En Linux / macOS:
-    pip install --upgrade pip (python.exe -m pip install --upgrade pip - en windows)
+    pip install --upgrade pip
     pip install -r requirements.txt
 
 En Windows:
